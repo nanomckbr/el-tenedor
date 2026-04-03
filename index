@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Tenedor</title>
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --card: #ffffff;
+      --text: #1e1e1e;
+      --muted: #6f6f6f;
+      --primary: #1f5f3b;
+      --primary-dark: #17482d;
+      --accent: #d4b15a;
+      --border: #e8e2d8;
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 110px;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font: inherit;
+      border: none;
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .hero {
+      background: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
+        url("https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80")
+        center/cover no-repeat;
+      color: white;
+      border-radius: 0 0 24px 24px;
+      padding: 22px 16px 28px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: #111;
+      border: 2px solid var(--accent);
+      display: grid;
+      place-items: center;
+      font-weight: bold;
+      color: var(--accent);
+      font-size: 12px;
+      text-transform: lowercase;
+      text-align: center;
+      line-height: 1.1;
+      padding: 6px;
+    }
+
+    .brand h1 {
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    .brand p {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,.85);
+    }
+
+    .status {
+      background: rgba(255,255,255,.14);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,.18);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .status span {
+      color: #78ff9e;
+      font-weight: bold;
+    }
+
+    .hero h2 {
+      font-size: 1.15rem;
+      font-weight: normal;
+      line-height: 1.45;
+      max-width: 520px;
+    }
+
+    .categories {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(247, 245, 240, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 10px 0 12px;
+      margin-bottom: 8px;
+    }
+
+    .categories-scroll {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .categories-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: bold;
+      white-space: nowrap;
+      box-shadow: 0 3px 8px rgba(0,0,0,.04);
+    }
+
+    .chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .section {
+      margin-top: 20px;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      margin-bottom: 14px;
+      padding-left: 4px;
+    }
+
+    .products {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .card-content {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 12px;
+      padding: 12px;
+      align-items: center;
+    }
+
+    .card-image {
+      width: 110px;
+      height: 110px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #ececec;
+    }
+
+    .card-info h3 {
+      font-size: 1.08rem;
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+
+    .card-info p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .price {
+      font-size: 1.35rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .btn-add {
+      background: var(--primary);
+      color: white;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-weight: bold;
+      min-width: 98px;
+      transition: .2s ease;
+    }
+
+    .btn-add:active {
+      transform: scale(0.98);
+      background: var(--primary-dark);
+    }
+
+    .floating-cart {
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      width: min(calc(100% - 20px), 760px);
+      background: #121212;
+      color: white;
+      border-radius: 20px;
+      padding: 12px;
+      box-shadow: 0 14px 30px rgba(0,0,0,.28);
+      z-index: 50;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .cart-summary {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cart-summary strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 3px;
+    }
+
+    .cart-summary span {
+      display: block;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,.72);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cart-total {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .btn-cart {
+      background: #25d366;
+      color: #0f1a11;
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .empty-state {
+      color: var(--muted);
+      padding: 16px 4px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 460px) {
+      .brand h1 {
+        font-size: 1.35rem;
+      }
+
+      .brand p,
+      .status,
+      .hero h2 {
+        font-size: 0.9rem;
+      }
+
+      .card-content {
+        grid-template-columns: 92px 1fr;
+      }
+
+      .card-image {
+        width: 92px;
+        height: 92px;
+      }
+
+      .price {
+        font-size: 1.2rem;
+      }
+
+      .btn-add {
+        padding: 10px 13px;
+        min-width: auto;
+      }
+
+      .floating-cart {
+        padding: 10px;
+      }
+
+      .btn-cart {
+        padding: 12px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <div class="hero-top">
+        <div class="brand">
+          <div class="logo">el<br>tenedor</div>
+          <div>
+            <h1>El Tenedor</h1>
+            <p>Pedidos por delivery y para consumir en el local</p>
+          </div>
+        </div>
+        <div class="status">Estado: <span>Abierto</span></div>
+      </div>
+      <h2>Elegí tu pedido, agregalo al carrito y envialo directo por WhatsApp.</h2>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="categories">
+      <div class="categories-scroll">
+        <a class="chip active" href="#hamburguesas">Hamburguesas</a>
+        <a class="chip" href="#acompañamientos">Acompañamientos</a>
+        <a class="chip" href="#promos">Promos</a>
+        <a class="chip" href="#pizzas">Pizzas</a>
+      </div>
+    </nav>
+
+    <section class="section" id="hamburguesas">
+      <h2 class="section-title">Hamburguesas</h2>
+      <div class="products">
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80" alt="Hamburguesa completa">
+            <div class="card-info">
+              <h3>Hamburguesa completa</h3>
+              <p>Pan con semillas, carne, lechuga, tomate y huevo.</p>
+              <div class="card-bottom">
+                <div class="price">$5000</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Hamburguesa completa', 5000)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1550317138-10000687a72b?auto=format&fit=crop&w=600&q=80" alt="Hamburguesa doble completa">
+            <div class="card-info">
+              <h3>Hamburguesa doble completa</h3>
+              <p>Doble carne con vegetales frescos y huevo.</p>
+              <div class="card-bottom">
+                <div class="price">$6800</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Hamburguesa doble completa', 6800)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?auto=format&fit=crop&w=600&q=80" alt="Hamburguesa doble con fritas">
+            <div class="card-info">
+              <h3>Hamburguesa doble con fritas</h3>
+              <p>Doble hamburguesa acompañada con papas fritas.</p>
+              <div class="card-bottom">
+                <div class="price">$7800</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Hamburguesa doble con fritas', 7800)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1596662951482-0c4ba74a6df6?auto=format&fit=crop&w=600&q=80" alt="Hamburguesa triple completa">
+            <div class="card-info">
+              <h3>Hamburguesa triple completa</h3>
+              <p>Triple carne para los que quieren ir fuerte.</p>
+              <div class="card-bottom">
+                <div class="price">$7800</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Hamburguesa triple completa', 7800)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80" alt="Hamburguesa triple con fritas">
+            <div class="card-info">
+              <h3>Hamburguesa triple con fritas</h3>
+              <p>Triple hamburguesa más porción de fritas.</p>
+              <div class="card-bottom">
+                <div class="price">$8800</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Hamburguesa triple con fritas', 8800)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="acompañamientos">
+      <h2 class="section-title">Acompañamientos</h2>
+      <div class="products">
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80" alt="Porción de fritas">
+            <div class="card-info">
+              <h3>Porción de fritas</h3>
+              <p>Papas fritas doradas y crocantes.</p>
+              <div class="card-bottom">
+                <div class="price">$4000</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Porción de fritas', 4000)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="promos">
+      <h2 class="section-title">Promos</h2>
+      <div class="products">
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80" alt="Promo tres hamburguesas">
+            <div class="card-info">
+              <h3>3 hamburguesas + fritas grandes</h3>
+              <p>Promo ideal para compartir.</p>
+              <div class="card-bottom">
+                <div class="price">$15000</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Promo 3 hamburguesas + fritas grandes', 15000)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=600&q=80" alt="Super combo kid">
+            <div class="card-info">
+              <h3>Super combo kid</h3>
+              <p>Combo familiar con hamburguesas y papas.</p>
+              <div class="card-bottom">
+                <div class="price">$15000</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Super combo kid', 15000)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="pizzas">
+      <h2 class="section-title">Pizzas</h2>
+      <div class="products">
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80" alt="Pizza muzzarella">
+            <div class="card-info">
+              <h3>Pizza muzzarella</h3>
+              <p>La clásica que nunca falla.</p>
+              <div class="card-bottom">
+                <div class="price">$9000</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Pizza muzzarella', 9000)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=600&q=80" alt="Pizza de jamón">
+            <div class="card-info">
+              <h3>Pizza de jamón</h3>
+              <p>Muzzarella con jamón cocido.</p>
+              <div class="card-bottom">
+                <div class="price">$12000</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Pizza de jamón', 12000)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80" alt="Pizza primavera">
+            <div class="card-info">
+              <h3>Pizza primavera</h3>
+              <p>Una opción fresca y sabrosa.</p>
+              <div class="card-bottom">
+                <div class="price">$12000</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Pizza primavera', 12000)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-content">
+            <img class="card-image" src="https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?auto=format&fit=crop&w=600&q=80" alt="Pizza napolitana">
+            <div class="card-info">
+              <h3>Pizza napolitana</h3>
+              <p>Tomate, queso y un toque bien casero.</p>
+              <div class="card-bottom">
+                <div class="price">$12000</div>
+                <button class="btn-add" onclick="agregarAlCarrito('Pizza napolitana', 12000)">Agregar</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="empty-state">
+      Más adelante acá podés sumar bebidas, extras, notas del pedido y horarios.
+    </div>
+  </main>
+
+  <div class="floating-cart">
+    <div class="cart-summary">
+      <strong id="cart-count">0 productos</strong>
+      <span>Total: <span class="cart-total" id="cart-total">$0</span></span>
+    </div>
+    <button class="btn-cart" onclick="enviarWhatsApp()">Pedir</button>
+  </div>
+
+  <script>
+    const carrito = [];
+    const numeroWhatsApp = "5490000000000"; // reemplazar por el número real
+
+    function agregarAlCarrito(nombre, precio) {
+      const productoExistente = carrito.find(item => item.nombre === nombre);
+
+      if (productoExistente) {
+        productoExistente.cantidad += 1;
+      } else {
+        carrito.push({ nombre, precio, cantidad: 1 });
+      }
+
+      renderCarrito();
+    }
+
+    function renderCarrito() {
+      const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+      const totalPrecio = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+
+      document.getElementById("cart-count").textContent =
+        totalItems === 1 ? "1 producto" : `${totalItems} productos`;
+
+      document.getElementById("cart-total").textContent = `$${totalPrecio.toLocaleString("es-AR")}`;
+    }
+
+    function enviarWhatsApp() {
+      if (carrito.length === 0) {
+        alert("Primero agregá al menos un producto.");
+        return;
+      }
+
+      let mensaje = "Hola! Quiero pedir:%0A%0A";
+
+      carrito.forEach(item => {
+        const subtotal = item.precio * item.cantidad;
+        mensaje += `- ${item.nombre} x${item.cantidad} — $${subtotal.toLocaleString("es-AR")}%0A`;
+      });
+
+      const total = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+      mensaje += `%0ATotal: $${total.toLocaleString("es-AR")}`;
+
+      const url = `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
+      window.open(url, "_blank");
+    }
+  </script>
+</body>
+</html>
