@@ -1,0 +1,10 @@
+Poné acá tus archivos visuales del proyecto.
+
+Sugerencia de estructura:
+- assets/logo-el-tenedor.png
+- assets/productos/hamburguesa-completa.jpg
+- assets/productos/pizza-muzzarella.jpg
+
+Después podés reemplazar las URLs remotas del HTML por rutas locales como:
+assets/logo-el-tenedor.png
+assets/productos/hamburguesa-completa.jpg
