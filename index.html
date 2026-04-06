@@ -409,6 +409,7 @@
 
     
     .floating-cart {
+      display: none;
       position: fixed;
       left: 50%;
       bottom: 14px;
@@ -685,6 +686,7 @@
       }
 
       .floating-cart {
+      display: none;
         width: min(calc(100% - 24px), 520px);
       }
 
@@ -718,6 +720,7 @@
       }
 
       .floating-cart {
+      display: none;
         left: 18px;
         right: auto;
         bottom: 18px;
@@ -736,6 +739,7 @@
       }
 
       .floating-cart {
+      display: none;
         width: min(calc(100% - 40px), 720px);
         bottom: 20px;
       }
@@ -791,6 +795,7 @@
       }
 
       .floating-cart {
+      display: none;
         padding: 10px;
       }
 
@@ -805,6 +810,7 @@
 
     @media (max-width: 640px) {
       .floating-cart {
+      display: none;
         left: 50%;
         right: auto;
         bottom: 10px;
@@ -820,6 +826,341 @@
       .btn-cart {
         min-width: 84px;
         padding: 10px 12px;
+      }
+    }
+
+  
+    .cart-fab {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #121212;
+      color: #fff;
+      box-shadow: var(--shadow-strong);
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .cart-fab-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .cart-fab-badge {
+      position: absolute;
+      top: -4px;
+      right: -2px;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: #25d366;
+      color: #fff;
+      font-size: .82rem;
+      font-weight: bold;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 6px 16px rgba(37,211,102,.28);
+    }
+
+    .cart-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: none;
+    }
+
+    .cart-modal.show {
+      display: block;
+    }
+
+    .cart-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.28);
+      backdrop-filter: blur(2px);
+    }
+
+    .cart-panel {
+      position: absolute;
+      left: 18px;
+      bottom: 92px;
+      width: min(420px, calc(100vw - 36px));
+      max-height: min(78vh, 760px);
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: var(--shadow-strong);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-handle {
+      display: none;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-header h3 {
+      font-size: 1.18rem;
+      margin-bottom: 4px;
+    }
+
+    .cart-header p {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.35;
+    }
+
+    .cart-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #f1ede5;
+      color: var(--text);
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .cart-body {
+      padding: 14px 18px;
+      overflow: auto;
+      max-height: 34vh;
+    }
+
+    .cart-item {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fffdf9;
+    }
+
+    .cart-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .cart-item-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .cart-item-name {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .cart-item-price {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .cart-item-subtotal {
+      font-weight: bold;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f3efe6;
+      border-radius: 12px;
+      padding: 5px;
+    }
+
+    .btn-counter {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .counter-value {
+      min-width: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .btn-remove {
+      padding: 9px 12px;
+      border-radius: 12px;
+      background: #f7e7e7;
+      color: #9d2c2c;
+    }
+
+    .cart-empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 18px 8px;
+      line-height: 1.45;
+    }
+
+    .cart-footer {
+      padding: 16px 18px 18px;
+      border-top: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 1rem;
+    }
+
+    .cart-total-row strong {
+      font-size: 1.18rem;
+      color: var(--primary);
+    }
+
+    .checkout-fields {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .field-group label,
+    .field-label {
+      display: block;
+      font-size: .9rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .field-group input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 13px;
+      font: inherit;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .field-group input:focus {
+      outline: 2px solid rgba(31,95,59,.14);
+      border-color: var(--primary);
+    }
+
+    .delivery-options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .delivery-option {
+      flex: 1;
+      min-width: 145px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 12px;
+      background: #fffdf9;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .delivery-option input {
+      accent-color: var(--primary);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      padding: 13px 16px;
+      margin-bottom: 10px;
+    }
+
+    .btn-clear {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #f1ede5;
+      color: var(--text);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(18px);
+      background: #121212;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 14px;
+      box-shadow: var(--shadow-strong);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 80;
+      transition: .22s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .cart-fab {
+        left: 14px;
+        bottom: 14px;
+        width: 58px;
+        height: 58px;
+      }
+
+      .cart-panel {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-height: 85vh;
+        border-radius: 22px 22px 0 0;
+      }
+
+      .cart-handle {
+        display: block;
+        width: 54px;
+        height: 5px;
+        border-radius: 999px;
+        background: #ddd6c8;
+        margin: 10px auto 0;
+      }
+
+      .cart-body {
+        max-height: 30vh;
+      }
+
+      .delivery-options {
+        flex-direction: column;
       }
     }
 
@@ -859,16 +1200,10 @@
     </div>
   </main>
 
-  <div class="floating-cart" id="floating-cart">
-    <div class="cart-summary" aria-live="polite">
-      <strong id="cart-count">0 productos</strong>
-      <span>Total: <span class="cart-total" id="cart-total">$0</span></span>
-    </div>
-    <div class="cart-actions">
-      <button class="btn-cart btn-outline" type="button" id="open-cart-btn">Ver carrito</button>
-      <button class="btn-cart" type="button" id="quick-order-btn">Pedir</button>
-    </div>
-  </div>
+  <button class="cart-fab" id="open-cart-btn" type="button" aria-label="Abrir carrito">
+    <span class="cart-fab-icon">🛒</span>
+    <span class="cart-fab-badge" id="cart-badge">0</span>
+  </button>
 
   <div class="cart-modal" id="cart-modal" aria-hidden="true">
     <div class="cart-backdrop" id="cart-backdrop"></div>
@@ -887,6 +1222,33 @@
           <span>Total</span>
           <strong id="modal-cart-total">$0</strong>
         </div>
+
+        <div class="checkout-fields">
+          <div class="field-group">
+            <label for="customer-name">Nombre</label>
+            <input id="customer-name" type="text" placeholder="Tu nombre" />
+          </div>
+
+          <div class="field-group">
+            <label for="customer-address">Domicilio</label>
+            <input id="customer-address" type="text" placeholder="Tu dirección" />
+          </div>
+
+          <div class="field-group">
+            <span class="field-label">Entrega</span>
+            <div class="delivery-options">
+              <label class="delivery-option">
+                <input type="radio" name="delivery-type" value="Retiro en local" checked />
+                <span>Retiro en local</span>
+              </label>
+              <label class="delivery-option">
+                <input type="radio" name="delivery-type" value="Delivery" />
+                <span>Delivery</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
         <button class="btn-primary" type="button" id="modal-order-btn">Pedir por WhatsApp</button>
         <button class="btn-clear" type="button" id="clear-cart-btn">Vaciar carrito</button>
       </div>
@@ -1013,8 +1375,7 @@
     const carrito = [];
     const categoriesNav = document.getElementById('categories-nav');
     const menuSections = document.getElementById('menu-sections');
-    const cartCount = document.getElementById('cart-count');
-    const cartTotal = document.getElementById('cart-total');    const cartModal = document.getElementById('cart-modal');
+    const cartBadge = document.getElementById('cart-badge');    const cartModal = document.getElementById('cart-modal');
     const cartItems = document.getElementById('cart-items');
     const modalCartTotal = document.getElementById('modal-cart-total');
     const toast = document.getElementById('toast');
@@ -1119,7 +1480,8 @@
       const totalPrecio = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
 
       cartCount.textContent = totalItems === 1 ? '1 producto' : `${totalItems} productos`;
-      cartTotal.textContent = formatoARS(totalPrecio);      modalCartTotal.textContent = formatoARS(totalPrecio);
+      cartBadge.textContent = totalItems;
+      modalCartTotal.textContent = formatoARS(totalPrecio);
 
       cartItems.innerHTML = carrito.length ? carrito.map(item => `
         <article class="cart-item">
@@ -1148,6 +1510,10 @@
     }
 
     function construirMensajeWhatsApp() {
+      const nombre = document.getElementById('customer-name').value.trim();
+      const domicilio = document.getElementById('customer-address').value.trim();
+      const entrega = document.querySelector('input[name="delivery-type"]:checked')?.value || 'Retiro en local';
+
       let mensaje = 'Hola! Quiero pedir:%0A%0A';
 
       carrito.forEach(item => {
@@ -1156,7 +1522,10 @@
       });
 
       const total = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
-      mensaje += `%0ATotal: ${formatoARS(total)}`;
+      mensaje += `%0ATotal: ${formatoARS(total)}%0A%0A`;
+      mensaje += `Nombre: ${nombre || '-'}%0A`;
+      mensaje += `Entrega: ${entrega}%0A`;
+      mensaje += `Domicilio: ${entrega === 'Delivery' ? (domicilio || '-') : 'Retira en local'}`;
 
       return mensaje;
     }
@@ -1164,6 +1533,22 @@
     function enviarWhatsApp() {
       if (!carrito.length) {
         mostrarToast('Primero agregá al menos un producto');
+        return;
+      }
+
+      const entrega = document.querySelector('input[name="delivery-type"]:checked')?.value || 'Retiro en local';
+      const nombre = document.getElementById('customer-name').value.trim();
+      const domicilio = document.getElementById('customer-address').value.trim();
+
+      if (!nombre) {
+        mostrarToast('Completá tu nombre');
+        document.getElementById('customer-name').focus();
+        return;
+      }
+
+      if (entrega === 'Delivery' && !domicilio) {
+        mostrarToast('Completá el domicilio para delivery');
+        document.getElementById('customer-address').focus();
         return;
       }
 
@@ -1211,7 +1596,7 @@
     }
 
     document.getElementById('open-cart-btn').addEventListener('click', abrirCarrito);
-    document.getElementById('quick-order-btn').addEventListener('click', enviarWhatsApp);    document.getElementById('modal-order-btn').addEventListener('click', enviarWhatsApp);
+    document.getElementById('modal-order-btn').addEventListener('click', enviarWhatsApp);
     document.getElementById('close-cart-btn').addEventListener('click', cerrarCarrito);
     document.getElementById('cart-backdrop').addEventListener('click', cerrarCarrito);
     document.getElementById('clear-cart-btn').addEventListener('click', vaciarCarrito);
