@@ -3,207 +3,774 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Productos — El Tenedor (Compacto)</title>
-
+<title>Productos — El Tenedor (Funcional)</title>
 <style>
-body{
-  margin:0;
-  font-family: Arial, sans-serif;
-  background:#121212;
-  color:#fff;
-}
+  :root{
+    --bg:
+      radial-gradient(circle at top center, rgba(245,197,24,.12), transparent 24%),
+      linear-gradient(180deg, #121212 0%, #181818 48%, #2a1b08 100%);
+    --text:#fff;
+    --muted:#c9c2b6;
+    --card:#1a1a1a;
+    --card-2:#202020;
+    --border:rgba(255,255,255,.08);
+    --accent:#f5c518;
+    --green:#22c55e;
+    --red:#ef4444;
+    --shadow:0 16px 36px rgba(0,0,0,.28);
+    --radius:16px;
+  }
 
-.container{
-  width:min(1100px, calc(100% - 20px));
-  margin:auto;
-  padding:20px 0;
-}
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
+  body.modal-open{overflow:hidden}
+  button,input,select,textarea{font:inherit}
+  button{border:none;cursor:pointer}
+  .container{
+    width:min(1120px, calc(100% - 20px));
+    margin:auto;
+    padding:22px 0 28px;
+  }
 
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:15px;
-}
+  .top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .top h2{
+    margin:0;
+    font-size:clamp(1.5rem, 3vw, 2rem);
+  }
 
-.btn{
-  padding:10px 14px;
-  border-radius:10px;
-  border:none;
-  cursor:pointer;
-  font-weight:bold;
-}
+  .btn{
+    padding:10px 14px;
+    border-radius:12px;
+    font-weight:800;
+    transition:.16s ease;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn-yellow{
+    background:var(--accent);
+    color:#000;
+    box-shadow:0 10px 24px rgba(245,197,24,.18);
+  }
+  .btn-dark{
+    background:#242424;
+    color:#fff;
+    border:1px solid var(--border);
+  }
+  .btn-red{
+    background:rgba(239,68,68,.16);
+    color:#ffd6d6;
+    border:1px solid rgba(239,68,68,.18);
+  }
+  .btn-green{
+    background:rgba(34,197,94,.16);
+    color:#cbffd9;
+    border:1px solid rgba(34,197,94,.18);
+  }
 
-.btn-yellow{
-  background:#f5c518;
-  color:#000;
-}
+  .toolbar{
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .search{
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:#1e1e1e;
+    color:#fff;
+    outline:none;
+  }
 
-.search{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  margin-bottom:10px;
-  background:#1e1e1e;
-  color:#fff;
-}
+  .filters{
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .filter{
+    padding:8px 12px;
+    border-radius:999px;
+    background:#1f1f1f;
+    color:#fff;
+    border:1px solid var(--border);
+    cursor:pointer;
+    font-size:14px;
+    font-weight:800;
+    transition:.16s ease;
+  }
+  .filter.active{
+    background:var(--accent);
+    color:#000;
+    border-color:var(--accent);
+  }
 
-.filters{
-  display:flex;
-  gap:8px;
-  margin-bottom:15px;
-  flex-wrap:wrap;
-}
+  .grid{
+    display:grid;
+    gap:10px;
+  }
 
-.filter{
-  padding:8px 12px;
-  border-radius:999px;
-  background:#1e1e1e;
-  cursor:pointer;
-  font-size:14px;
-}
+  .card{
+    display:flex;
+    gap:12px;
+    background:linear-gradient(135deg, rgba(255,255,255,.04), rgba(245,197,24,.04));
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:10px;
+    align-items:center;
+    box-shadow:var(--shadow);
+    transition:.16s ease;
+  }
+  .card:hover{
+    transform:translateY(-1px);
+    border-color:rgba(245,197,24,.2);
+  }
+  .card.inactive-row{
+    opacity:.64;
+  }
+  .card.clickable{cursor:pointer}
 
-.filter.active{
-  background:#f5c518;
-  color:#000;
-}
+  .card img{
+    width:82px;
+    height:82px;
+    object-fit:cover;
+    border-radius:10px;
+    background:#0f0f0f;
+    flex-shrink:0;
+  }
 
-.grid{
-  display:grid;
-  gap:10px;
-}
+  .info{
+    flex:1;
+    min-width:0;
+  }
+  .name{
+    font-weight:900;
+    font-size:1rem;
+    margin-bottom:4px;
+  }
+  .meta{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.35;
+  }
 
-.card{
-  display:flex;
-  gap:12px;
-  background:#1a1a1a;
-  border-radius:14px;
-  padding:10px;
-  align-items:center;
-}
+  .price{
+    color:var(--accent);
+    font-weight:900;
+    font-size:1.05rem;
+    min-width:78px;
+    text-align:right;
+    white-space:nowrap;
+  }
 
-.card img{
-  width:80px;
-  height:80px;
-  object-fit:cover;
-  border-radius:10px;
-}
+  .actions{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+    flex-shrink:0;
+  }
 
-.info{
-  flex:1;
-}
+  .small-btn{
+    padding:8px 10px;
+    border-radius:10px;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.16s ease;
+  }
+  .small-btn:hover{transform:translateY(-1px)}
+  .small-btn:active{transform:translateY(0)}
+  .edit{background:var(--accent);color:#000}
+  .toggle{
+    color:#fff;
+    border:1px solid transparent;
+  }
+  .toggle.active{background:rgba(34,197,94,.16); color:#cbffd9; border-color:rgba(34,197,94,.18)}
+  .toggle.inactive{background:rgba(239,68,68,.16); color:#ffd6d6; border-color:rgba(239,68,68,.18)}
 
-.name{
-  font-weight:bold;
-}
+  .empty{
+    padding:18px;
+    border:1px dashed var(--border);
+    border-radius:14px;
+    text-align:center;
+    color:var(--muted);
+    background:rgba(255,255,255,.03);
+  }
 
-.price{
-  color:#f5c518;
-  font-weight:bold;
-}
+  .drawer-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.48);
+    backdrop-filter:blur(4px);
+    opacity:0;
+    pointer-events:none;
+    transition:.18s ease;
+    z-index:90;
+  }
+  .drawer-backdrop.show{
+    opacity:1;
+    pointer-events:auto;
+  }
 
-.meta{
-  font-size:12px;
-  color:#aaa;
-}
+  .drawer{
+    position:fixed;
+    top:0;
+    right:0;
+    width:min(460px, 100%);
+    height:100vh;
+    background:#111;
+    border-left:1px solid rgba(245,197,24,.16);
+    box-shadow:-20px 0 40px rgba(0,0,0,.32);
+    z-index:100;
+    transform:translateX(100%);
+    transition:.2s ease;
+    display:flex;
+    flex-direction:column;
+  }
+  .drawer.show{transform:translateX(0)}
 
-.actions{
-  display:flex;
-  gap:6px;
-}
+  .drawer-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    padding:18px;
+    border-bottom:1px solid var(--border);
+  }
+  .drawer-head h3{
+    margin:0 0 4px;
+    font-size:1.1rem;
+  }
+  .drawer-head p{
+    margin:0;
+    color:var(--muted);
+    font-size:.92rem;
+    line-height:1.4;
+  }
 
-.small-btn{
-  padding:6px 10px;
-  border-radius:8px;
-  font-size:12px;
-  border:none;
-  cursor:pointer;
-}
+  .drawer-close{
+    width:40px;height:40px;border-radius:50%;
+    background:#1f1f1f;color:#fff;border:1px solid var(--border);
+    font-size:1.35rem;flex-shrink:0;
+  }
 
-.edit{
-  background:#f5c518;
-  color:#000;
-}
+  .drawer-body{
+    padding:18px;
+    overflow:auto;
+    display:grid;
+    gap:12px;
+  }
+  .field{
+    display:grid;
+    gap:7px;
+  }
+  .field label{
+    font-size:.8rem;
+    font-weight:900;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  .field input,
+  .field select,
+  .field textarea{
+    width:100%;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:#171717;
+    color:#fff;
+    padding:12px 14px;
+    outline:none;
+  }
+  .field textarea{
+    min-height:100px;
+    resize:vertical;
+  }
+  .preview{
+    width:100%;
+    max-height:180px;
+    object-fit:cover;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:#0f0f0f;
+    display:none;
+  }
+  .preview.show{display:block}
 
-.toggle{
-  background:#333;
-  color:#fff;
-}
+  .drawer-foot{
+    padding:18px;
+    border-top:1px solid var(--border);
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    background:#111;
+  }
+  .drawer-foot .btn{
+    flex:1;
+    min-width:140px;
+  }
 
-.active{
-  background:#22c55e;
-}
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:18px;
+    transform:translateX(-50%) translateY(18px);
+    background:#111;
+    color:#fff;
+    border:1px solid rgba(245,197,24,.16);
+    padding:12px 16px;
+    border-radius:12px;
+    box-shadow:var(--shadow);
+    opacity:0;
+    pointer-events:none;
+    transition:.2s ease;
+    z-index:120;
+  }
+  .toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
 
-.inactive{
-  background:#ef4444;
-}
+  @media (max-width: 860px){
+    .toolbar{grid-template-columns:1fr}
+    .card{
+      align-items:flex-start;
+    }
+    .price{
+      text-align:left;
+      min-width:auto;
+    }
+    .actions{
+      justify-content:flex-start;
+    }
+  }
 
+  @media (max-width: 640px){
+    .card{
+      display:grid;
+      grid-template-columns:82px 1fr;
+      gap:12px;
+    }
+    .price{
+      grid-column:2;
+      margin-top:-2px;
+    }
+    .actions{
+      grid-column:1 / -1;
+    }
+    .drawer{width:100%}
+  }
 </style>
 </head>
-
 <body>
 
 <div class="container">
-
   <div class="top">
     <h2>Productos</h2>
-    <button class="btn btn-yellow">+ Agregar</button>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn btn-dark" id="refreshBtn" type="button">Actualizar</button>
+      <button class="btn btn-yellow" id="openAddBtn" type="button">+ Agregar</button>
+    </div>
   </div>
 
-  <input class="search" placeholder="Buscar producto...">
-
-  <div class="filters">
-    <div class="filter active">Todas</div>
-    <div class="filter">Hamburguesas</div>
-    <div class="filter">Pizzas</div>
-    <div class="filter">Promos</div>
+  <div class="toolbar">
+    <input id="searchInput" class="search" placeholder="Buscar por nombre o categoría...">
+    <button class="btn btn-dark" id="sortBtn" type="button">Ordenar A-Z</button>
+    <button class="btn btn-dark" id="onlyActiveBtn" type="button">Solo activos: OFF</button>
   </div>
 
-  <div class="grid">
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd">
-      <div class="info">
-        <div class="name">Hamburguesa completa</div>
-        <div class="meta">Hamburguesas</div>
-      </div>
-      <div class="price">$5000</div>
-      <div class="actions">
-        <button class="small-btn edit">Editar</button>
-        <button class="small-btn toggle active">Activo</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1550317138-10000687a72b">
-      <div class="info">
-        <div class="name">Hamburguesa doble</div>
-        <div class="meta">Hamburguesas</div>
-      </div>
-      <div class="price">$6800</div>
-      <div class="actions">
-        <button class="small-btn edit">Editar</button>
-        <button class="small-btn toggle active">Activo</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877">
-      <div class="info">
-        <div class="name">Papas fritas</div>
-        <div class="meta">Acompañamientos</div>
-      </div>
-      <div class="price">$4000</div>
-      <div class="actions">
-        <button class="small-btn edit">Editar</button>
-        <button class="small-btn toggle inactive">Pausado</button>
-      </div>
-    </div>
-
-  </div>
-
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="productsGrid"></div>
 </div>
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div>
+      <h3 id="drawerTitle">Agregar producto</h3>
+      <p id="drawerSubtitle">Completá los datos del producto del menú.</p>
+    </div>
+    <button class="drawer-close" type="button" id="closeDrawerBtn">×</button>
+  </div>
+
+  <form class="drawer-body" id="productForm">
+    <input type="hidden" id="productId">
+
+    <div class="field">
+      <label for="nameInput">Nombre</label>
+      <input id="nameInput" type="text" placeholder="Ej. Hamburguesa completa" required>
+    </div>
+
+    <div class="field">
+      <label for="priceInput">Precio</label>
+      <input id="priceInput" type="number" min="0" step="1" placeholder="5000" required>
+    </div>
+
+    <div class="field">
+      <label for="categoryInput">Categoría</label>
+      <select id="categoryInput" required>
+        <option value="Hamburguesas">Hamburguesas</option>
+        <option value="Acompañamientos">Acompañamientos</option>
+        <option value="Promos">Promos</option>
+        <option value="Pizzas">Pizzas</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="descriptionInput">Descripción</label>
+      <textarea id="descriptionInput" placeholder="Descripción breve del producto"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="imageInput">Foto</label>
+      <input id="imageInput" type="file" accept="image/*">
+      <img id="imagePreview" class="preview" alt="Vista previa">
+    </div>
+
+    <div class="field">
+      <label for="statusInput">Estado</label>
+      <select id="statusInput">
+        <option value="true">Activo</option>
+        <option value="false">Pausado</option>
+      </select>
+    </div>
+  </form>
+
+  <div class="drawer-foot">
+    <button class="btn btn-dark" type="button" id="cancelBtn">Cancelar</button>
+    <button class="btn btn-yellow" type="submit" form="productForm">Guardar producto</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const initialProducts = [
+    {
+      id: 1,
+      name: "Hamburguesa completa",
+      category: "Hamburguesas",
+      description: "Pan con semillas, carne, lechuga, tomate y huevo.",
+      price: 5000,
+      active: true,
+      image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 2,
+      name: "Hamburguesa doble",
+      category: "Hamburguesas",
+      description: "Doble carne con vegetales frescos y huevo.",
+      price: 6800,
+      active: true,
+      image: "https://images.unsplash.com/photo-1550317138-10000687a72b?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 3,
+      name: "Papas fritas",
+      category: "Acompañamientos",
+      description: "Papas fritas doradas y crocantes.",
+      price: 4000,
+      active: false,
+      image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 4,
+      name: "Pizza muzzarella",
+      category: "Pizzas",
+      description: "La clásica que nunca falla.",
+      price: 9000,
+      active: true,
+      image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      id: 5,
+      name: "3 hamburguesas + fritas grandes",
+      category: "Promos",
+      description: "Promo ideal para compartir.",
+      price: 15000,
+      active: true,
+      image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=900&q=80"
+    }
+  ];
+
+  let products = structuredClone(initialProducts);
+  let currentCategory = "Todas";
+  let onlyActive = false;
+  let sortAsc = true;
+  let tempImage = "";
+
+  const grid = document.getElementById("productsGrid");
+  const filters = document.getElementById("filters");
+  const searchInput = document.getElementById("searchInput");
+  const onlyActiveBtn = document.getElementById("onlyActiveBtn");
+  const sortBtn = document.getElementById("sortBtn");
+
+  const drawer = document.getElementById("drawer");
+  const drawerBackdrop = document.getElementById("drawerBackdrop");
+  const openAddBtn = document.getElementById("openAddBtn");
+  const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
+  const drawerTitle = document.getElementById("drawerTitle");
+  const drawerSubtitle = document.getElementById("drawerSubtitle");
+
+  const form = document.getElementById("productForm");
+  const productId = document.getElementById("productId");
+  const nameInput = document.getElementById("nameInput");
+  const priceInput = document.getElementById("priceInput");
+  const categoryInput = document.getElementById("categoryInput");
+  const descriptionInput = document.getElementById("descriptionInput");
+  const imageInput = document.getElementById("imageInput");
+  const imagePreview = document.getElementById("imagePreview");
+  const statusInput = document.getElementById("statusInput");
+  const toast = document.getElementById("toast");
+
+  function formatPrice(value){
+    return `$${Number(value).toLocaleString("es-AR")}`;
+  }
+
+  function showToast(message){
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => toast.classList.remove("show"), 1800);
+  }
+
+  function getCategories(){
+    return ["Todas", ...new Set(products.map(p => p.category))];
+  }
+
+  function renderFilters(){
+    filters.innerHTML = getCategories().map(category => `
+      <button class="filter ${currentCategory === category ? 'active' : ''}" data-category="${category}" type="button">${category}</button>
+    `).join("");
+
+    filters.querySelectorAll(".filter").forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentCategory = btn.dataset.category;
+        renderFilters();
+        renderProducts();
+      });
+    });
+  }
+
+  function getFilteredProducts(){
+    const search = searchInput.value.trim().toLowerCase();
+
+    let list = products.filter(product => {
+      const matchesCategory = currentCategory === "Todas" || product.category === currentCategory;
+      const matchesActive = !onlyActive || product.active;
+      const haystack = `${product.name} ${product.category} ${product.description}`.toLowerCase();
+      const matchesSearch = haystack.includes(search);
+      return matchesCategory && matchesActive && matchesSearch;
+    });
+
+    list.sort((a, b) => sortAsc
+      ? a.name.localeCompare(b.name, "es")
+      : b.name.localeCompare(a.name, "es")
+    );
+
+    return list;
+  }
+
+  function renderProducts(){
+    const list = getFilteredProducts();
+
+    if (!list.length){
+      grid.innerHTML = `<div class="empty">No hay productos que coincidan con los filtros.</div>`;
+      return;
+    }
+
+    grid.innerHTML = list.map(product => `
+      <div class="card clickable ${product.active ? '' : 'inactive-row'}" data-id="${product.id}">
+        <img src="${product.image}" alt="${product.name}">
+        <div class="info">
+          <div class="name">${product.name}</div>
+          <div class="meta">${product.category}</div>
+        </div>
+        <div class="price">${formatPrice(product.price)}</div>
+        <div class="actions">
+          <button class="small-btn edit" data-edit="${product.id}" type="button">Editar</button>
+          <button class="small-btn toggle ${product.active ? 'active' : 'inactive'}" data-toggle="${product.id}" type="button">
+            ${product.active ? 'Activo' : 'Pausado'}
+          </button>
+        </div>
+      </div>
+    `).join("");
+
+    grid.querySelectorAll("[data-edit]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openEdit(Number(btn.dataset.edit));
+      });
+    });
+
+    grid.querySelectorAll("[data-toggle]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleStatus(Number(btn.dataset.toggle));
+      });
+    });
+
+    grid.querySelectorAll(".card.clickable").forEach(card => {
+      card.addEventListener("click", () => openEdit(Number(card.dataset.id)));
+    });
+  }
+
+  function toggleStatus(id){
+    const product = products.find(p => p.id === id);
+    if (!product) return;
+    product.active = !product.active;
+    renderProducts();
+    showToast(product.active ? "Producto activado" : "Producto pausado");
+  }
+
+  function resetForm(){
+    form.reset();
+    productId.value = "";
+    tempImage = "";
+    imagePreview.src = "";
+    imagePreview.classList.remove("show");
+    statusInput.value = "true";
+  }
+
+  function openDrawer(){
+    drawer.classList.add("show");
+    drawerBackdrop.classList.add("show");
+    drawer.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+  }
+
+  function closeDrawer(){
+    drawer.classList.remove("show");
+    drawerBackdrop.classList.remove("show");
+    drawer.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+  }
+
+  function openAdd(){
+    resetForm();
+    drawerTitle.textContent = "Agregar producto";
+    drawerSubtitle.textContent = "Completá los datos del producto del menú.";
+    openDrawer();
+  }
+
+  function openEdit(id){
+    const product = products.find(p => p.id === id);
+    if (!product) return;
+
+    resetForm();
+    drawerTitle.textContent = "Editar producto";
+    drawerSubtitle.textContent = "Actualizá datos, foto o estado del producto.";
+    productId.value = product.id;
+    nameInput.value = product.name;
+    priceInput.value = product.price;
+    categoryInput.value = product.category;
+    descriptionInput.value = product.description;
+    statusInput.value = String(product.active);
+
+    tempImage = product.image;
+    imagePreview.src = product.image;
+    imagePreview.classList.add("show");
+
+    openDrawer();
+  }
+
+  function handleImagePreview(file){
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      tempImage = reader.result;
+      imagePreview.src = tempImage;
+      imagePreview.classList.add("show");
+    };
+    reader.readAsDataURL(file);
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const payload = {
+      name: nameInput.value.trim(),
+      category: categoryInput.value,
+      description: descriptionInput.value.trim(),
+      price: Number(priceInput.value || 0),
+      active: statusInput.value === "true",
+      image: tempImage || "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=900&q=80"
+    };
+
+    if (!payload.name || !payload.price){
+      showToast("Completá nombre y precio");
+      return;
+    }
+
+    if (productId.value){
+      const id = Number(productId.value);
+      const index = products.findIndex(p => p.id === id);
+      if (index !== -1){
+        products[index] = { ...products[index], ...payload };
+        showToast("Producto actualizado");
+      }
+    } else {
+      const nextId = Math.max(...products.map(p => p.id), 0) + 1;
+      products.unshift({ id: nextId, ...payload });
+      showToast("Producto agregado");
+    }
+
+    renderFilters();
+    renderProducts();
+    closeDrawer();
+  });
+
+  searchInput.addEventListener("input", renderProducts);
+
+  onlyActiveBtn.addEventListener("click", () => {
+    onlyActive = !onlyActive;
+    onlyActiveBtn.textContent = `Solo activos: ${onlyActive ? 'ON' : 'OFF'}`;
+    renderProducts();
+  });
+
+  sortBtn.addEventListener("click", () => {
+    sortAsc = !sortAsc;
+    sortBtn.textContent = sortAsc ? "Ordenar A-Z" : "Ordenar Z-A";
+    renderProducts();
+  });
+
+  imageInput.addEventListener("change", () => {
+    handleImagePreview(imageInput.files?.[0]);
+  });
+
+  openAddBtn.addEventListener("click", openAdd);
+  closeDrawerBtn.addEventListener("click", closeDrawer);
+  cancelBtn.addEventListener("click", closeDrawer);
+  drawerBackdrop.addEventListener("click", closeDrawer);
+  document.getElementById("refreshBtn").addEventListener("click", () => {
+    renderFilters();
+    renderProducts();
+    showToast("Vista actualizada");
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeDrawer();
+  });
+
+  renderFilters();
+  renderProducts();
+</script>
 
 </body>
 </html>
