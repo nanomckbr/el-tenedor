@@ -512,7 +512,7 @@
     async function requireAuth() {
       const { data, error } = await supabaseClient.auth.getSession();
       if (error || !data.session) {
-        window.location.href = '/login';
+        window.location.href = '/pedidos';
         return false;
       }
       return true;
