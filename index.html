@@ -200,10 +200,7 @@
     }
 
     .layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-      align-items: start;
+      display: block;
     }
 
     .menu-column {
@@ -231,10 +228,11 @@
       margin: -4px 0 14px 4px;
     }
 
+    
     .products {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 14px;
+      gap: 16px;
     }
 
     .card {
@@ -244,6 +242,7 @@
       overflow: hidden;
       box-shadow: var(--shadow);
       transition: transform .2s ease, box-shadow .2s ease;
+      height: 100%;
     }
 
     .card:hover {
@@ -252,33 +251,42 @@
     }
 
     .card-content {
-      display: grid;
-      grid-template-columns: 110px 1fr;
-      gap: 12px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
       padding: 12px;
-      align-items: center;
+      gap: 12px;
     }
 
     .card-image {
-      width: 110px;
-      height: 110px;
+      width: 100%;
+      aspect-ratio: 1 / 1;
       border-radius: 14px;
       object-fit: cover;
       background: #ececec;
+    }
+
+    .card-info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
     }
 
     .card-info h3 {
       font-size: 1.08rem;
       margin-bottom: 6px;
       line-height: 1.25;
+      min-height: 54px;
     }
 
     .card-info p {
       color: var(--muted);
       font-size: 0.92rem;
-      margin-bottom: 10px;
-      line-height: 1.35;
-      min-height: 37px;
+      margin-bottom: 12px;
+      line-height: 1.45;
+      flex: 1;
+      min-height: 72px;
     }
 
     .card-bottom {
@@ -286,13 +294,14 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      flex-wrap: wrap;
+      margin-top: auto;
     }
 
     .price {
       font-size: 1.35rem;
       font-weight: bold;
       color: var(--primary);
+      white-space: nowrap;
     }
 
     .btn-add {
@@ -303,6 +312,7 @@
       font-weight: bold;
       min-width: 102px;
       transition: .2s ease;
+      flex-shrink: 0;
     }
 
     .btn-add:hover,
@@ -326,14 +336,7 @@
     }
 
     .desktop-summary {
-      display: none;
-      position: sticky;
-      top: 88px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 18px;
+      display: none !important;
     }
 
     .desktop-summary h3 {
@@ -404,6 +407,7 @@
       font-size: 0.95rem;
     }
 
+    
     .floating-cart {
       position: fixed;
       left: 50%;
@@ -424,6 +428,7 @@
     .cart-summary {
       flex: 1;
       min-width: 0;
+      text-align: left;
     }
 
     .cart-summary strong {
@@ -446,11 +451,24 @@
       font-weight: bold;
     }
 
+    .cart-actions {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
     .btn-cart {
       background: #25d366;
-      color: #0f1a11;
+      color: #ffffff;
       padding: 14px 16px;
       white-space: nowrap;
+      min-width: 108px;
+    }
+
+    .btn-cart.btn-outline {
+      background: #232323;
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,.14);
     }
 
     .cart-modal {
@@ -691,24 +709,13 @@
         font-size: 1.22rem;
       }
 
-      .layout {
-        grid-template-columns: minmax(0, 1fr) 320px;
-      }
-
       .products {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .desktop-summary {
-        display: block;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .floating-cart {
-        width: 380px;
-        left: auto;
-        right: 20px;
+        width: min(calc(100% - 40px), 720px);
         bottom: 20px;
-        transform: none;
       }
 
       .cart-modal {
@@ -740,13 +747,16 @@
         font-size: 0.9rem;
       }
 
-      .card-content {
-        grid-template-columns: 92px 1fr;
+      .card-image {
+        aspect-ratio: 16 / 11;
       }
 
-      .card-image {
-        width: 92px;
-        height: 92px;
+      .card-info h3 {
+        min-height: auto;
+      }
+
+      .card-info p {
+        min-height: auto;
       }
 
       .price {
@@ -793,22 +803,6 @@
           <p>Base lista para mostrar en celular o en PC, con carrito completo y flujo de compra claro.</p>
         </div>
       </div>
-      <aside class="desktop-summary" aria-label="Resumen del pedido">
-        <h3>Resumen rápido</h3>
-        <p>Desde acá también podés abrir el carrito completo mientras trabajás en PC.</p>
-        <div class="desktop-summary-box">
-          <div class="desktop-summary-row">
-            <span>Productos</span>
-            <strong id="desktop-cart-count">0</strong>
-          </div>
-          <div class="desktop-summary-row">
-            <span>Total</span>
-            <strong id="desktop-cart-total">$0</strong>
-          </div>
-        </div>
-        <button class="btn-primary" type="button" id="desktop-open-cart">Ver carrito</button>
-        <button class="btn-secondary" type="button" id="desktop-order-btn">Pedir por WhatsApp</button>
-      </aside>
     </div>
   </header>
 
@@ -823,11 +817,14 @@
   </main>
 
   <div class="floating-cart" id="floating-cart">
-    <button class="cart-summary" type="button" id="open-cart-btn" aria-label="Abrir carrito">
+    <div class="cart-summary" aria-live="polite">
       <strong id="cart-count">0 productos</strong>
       <span>Total: <span class="cart-total" id="cart-total">$0</span></span>
-    </button>
-    <button class="btn-cart" type="button" id="quick-order-btn">Pedir</button>
+    </div>
+    <div class="cart-actions">
+      <button class="btn-cart btn-outline" type="button" id="open-cart-btn">Ver carrito</button>
+      <button class="btn-cart" type="button" id="quick-order-btn">Pedir</button>
+    </div>
   </div>
 
   <div class="cart-modal" id="cart-modal" aria-hidden="true">
@@ -974,10 +971,7 @@
     const categoriesNav = document.getElementById('categories-nav');
     const menuSections = document.getElementById('menu-sections');
     const cartCount = document.getElementById('cart-count');
-    const cartTotal = document.getElementById('cart-total');
-    const desktopCartCount = document.getElementById('desktop-cart-count');
-    const desktopCartTotal = document.getElementById('desktop-cart-total');
-    const cartModal = document.getElementById('cart-modal');
+    const cartTotal = document.getElementById('cart-total');    const cartModal = document.getElementById('cart-modal');
     const cartItems = document.getElementById('cart-items');
     const modalCartTotal = document.getElementById('modal-cart-total');
     const toast = document.getElementById('toast');
@@ -987,16 +981,20 @@
       return `$${valor.toLocaleString('es-AR')}`;
     }
 
+    let categoriaActiva = categorias[0].id;
+
     function renderCategorias() {
-      categoriesNav.innerHTML = categorias.map((categoria, index) => `
-        <a class="chip ${index === 0 ? 'active' : ''}" href="#${categoria.id}" data-category-link="${categoria.id}">
+      categoriesNav.innerHTML = categorias.map((categoria) => `
+        <button class="chip ${categoria.id === categoriaActiva ? 'active' : ''}" type="button" data-category-link="${categoria.id}">
           ${categoria.nombre}
-        </a>
+        </button>
       `).join('');
     }
 
     function renderMenu() {
-      menuSections.innerHTML = categorias.map((categoria, index) => `
+      const categoria = categorias.find(item => item.id === categoriaActiva) || categorias[0];
+
+      menuSections.innerHTML = `
         <section class="section" id="${categoria.id}" data-category-section="${categoria.id}">
           <h2 class="section-title">${categoria.nombre}</h2>
           <p class="section-subtitle">${categoria.descripcion}</p>
@@ -1018,10 +1016,6 @@
             `).join('')}
           </div>
         </section>
-      `).join('') + `
-        <div class="empty-state">
-          Más adelante acá podés sumar bebidas, extras, notas del pedido y horarios.
-        </div>
       `;
     }
 
@@ -1082,10 +1076,7 @@
       const totalPrecio = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
 
       cartCount.textContent = totalItems === 1 ? '1 producto' : `${totalItems} productos`;
-      cartTotal.textContent = formatoARS(totalPrecio);
-      desktopCartCount.textContent = totalItems;
-      desktopCartTotal.textContent = formatoARS(totalPrecio);
-      modalCartTotal.textContent = formatoARS(totalPrecio);
+      cartTotal.textContent = formatoARS(totalPrecio);      modalCartTotal.textContent = formatoARS(totalPrecio);
 
       cartItems.innerHTML = carrito.length ? carrito.map(item => `
         <article class="cart-item">
@@ -1159,35 +1150,25 @@
       }, 1800);
     }
 
+
     function activarChip(categoriaId) {
-      document.querySelectorAll('[data-category-link]').forEach(link => {
-        link.classList.toggle('active', link.dataset.categoryLink === categoriaId);
-      });
+      categoriaActiva = categoriaId;
+      renderCategorias();
+      renderMenu();
+      bindCategoryEvents();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function initScrollSpy() {
-      const sections = document.querySelectorAll('[data-category-section]');
-      const observer = new IntersectionObserver((entries) => {
-        const visible = entries
-          .filter(entry => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (visible) {
-          activarChip(visible.target.id);
-        }
-      }, {
-        rootMargin: '-20% 0px -60% 0px',
-        threshold: [0.15, 0.3, 0.5]
+    function bindCategoryEvents() {
+      document.querySelectorAll('[data-category-link]').forEach(link => {
+        link.addEventListener('click', () => {
+          activarChip(link.dataset.categoryLink);
+        });
       });
-
-      sections.forEach(section => observer.observe(section));
     }
 
     document.getElementById('open-cart-btn').addEventListener('click', abrirCarrito);
-    document.getElementById('quick-order-btn').addEventListener('click', enviarWhatsApp);
-    document.getElementById('desktop-open-cart').addEventListener('click', abrirCarrito);
-    document.getElementById('desktop-order-btn').addEventListener('click', enviarWhatsApp);
-    document.getElementById('modal-order-btn').addEventListener('click', enviarWhatsApp);
+    document.getElementById('quick-order-btn').addEventListener('click', enviarWhatsApp);    document.getElementById('modal-order-btn').addEventListener('click', enviarWhatsApp);
     document.getElementById('close-cart-btn').addEventListener('click', cerrarCarrito);
     document.getElementById('cart-backdrop').addEventListener('click', cerrarCarrito);
     document.getElementById('clear-cart-btn').addEventListener('click', vaciarCarrito);
@@ -1201,7 +1182,7 @@
     renderCategorias();
     renderMenu();
     renderCarrito();
-    initScrollSpy();
+    bindCategoryEvents();
 
     window.agregarAlCarrito = agregarAlCarrito;
     window.cambiarCantidad = cambiarCantidad;
