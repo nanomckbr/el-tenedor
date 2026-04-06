@@ -459,318 +459,67 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const initialProducts = [
-    {
-      id: 1,
-      name: "Hamburguesa completa",
-      category: "Hamburguesas",
-      description: "Pan con semillas, carne, lechuga, tomate y huevo.",
-      price: 5000,
-      active: true,
-      image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=80"
-    },
-    {
-      id: 2,
-      name: "Hamburguesa doble",
-      category: "Hamburguesas",
-      description: "Doble carne con vegetales frescos y huevo.",
-      price: 6800,
-      active: true,
-      image: "https://images.unsplash.com/photo-1550317138-10000687a72b?auto=format&fit=crop&w=900&q=80"
-    },
-    {
-      id: 3,
-      name: "Papas fritas",
-      category: "Acompañamientos",
-      description: "Papas fritas doradas y crocantes.",
-      price: 4000,
-      active: false,
-      image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=80"
-    },
-    {
-      id: 4,
-      name: "Pizza muzzarella",
-      category: "Pizzas",
-      description: "La clásica que nunca falla.",
-      price: 9000,
-      active: true,
-      image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=80"
-    },
-    {
-      id: 5,
-      name: "3 hamburguesas + fritas grandes",
-      category: "Promos",
-      description: "Promo ideal para compartir.",
-      price: 15000,
-      active: true,
-      image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=900&q=80"
-    }
-  ];
 
-  let products = structuredClone(initialProducts);
-  let currentCategory = "Todas";
-  let onlyActive = false;
-  let sortAsc = true;
-  let tempImage = "";
+const SUPABASE_URL = "https://fytgzvqtthzswpihlpsh.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_C3LXcMFims8fu3P4arad_w_vfGp0gIi";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let products = [];
+let currentCategory = 'Todas';
+let onlyActive = false;
+let sortAsc = true;
+let tempImage = '';
+const grid = document.getElementById('productsGrid');
+const filters = document.getElementById('filters');
+const searchInput = document.getElementById('searchInput');
+const onlyActiveBtn = document.getElementById('onlyActiveBtn');
+const sortBtn = document.getElementById('sortBtn');
+const drawer = document.getElementById('drawer');
+const drawerBackdrop = document.getElementById('drawerBackdrop');
+const openAddBtn = document.getElementById('openAddBtn');
+const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const drawerTitle = document.getElementById('drawerTitle');
+const drawerSubtitle = document.getElementById('drawerSubtitle');
+const form = document.getElementById('productForm');
+const productId = document.getElementById('productId');
+const nameInput = document.getElementById('nameInput');
+const priceInput = document.getElementById('priceInput');
+const categoryInput = document.getElementById('categoryInput');
+const descriptionInput = document.getElementById('descriptionInput');
+const imageInput = document.getElementById('imageInput');
+const imagePreview = document.getElementById('imagePreview');
+const statusInput = document.getElementById('statusInput');
+const toast = document.getElementById('toast');
+function showToast(message){ toast.textContent = message; toast.classList.add('show'); clearTimeout(showToast._timer); showToast._timer = setTimeout(() => toast.classList.remove('show'), 1800); }
+function formatPrice(value){ return `$${Number(value || 0).toLocaleString('es-AR')}`; }
+function getCategories(){ return ['Todas', ...new Set(products.map(p => p.category).filter(Boolean))]; }
+function renderFilters(){ filters.innerHTML = getCategories().map(category => `<button class="filter ${currentCategory === category ? 'active' : ''}" data-category="${category}" type="button">${category}</button>`).join(''); filters.querySelectorAll('.filter').forEach(btn => btn.addEventListener('click', () => { currentCategory = btn.dataset.category; renderFilters(); renderProducts(); })); }
+function getFilteredProducts(){ const search = searchInput.value.trim().toLowerCase(); let list = products.filter(product => { const matchesCategory = currentCategory === 'Todas' || product.category === currentCategory; const matchesActive = !onlyActive || product.active; const haystack = `${product.name} ${product.category} ${product.description || ''}`.toLowerCase(); return matchesCategory && matchesActive && haystack.includes(search); }); list.sort((a,b) => sortAsc ? a.name.localeCompare(b.name,'es') : b.name.localeCompare(a.name,'es')); return list; }
+function renderProducts(){ const list = getFilteredProducts(); if (!list.length){ grid.innerHTML = `<div class="empty">No hay productos que coincidan con los filtros.</div>`; return; } grid.innerHTML = list.map(product => `<div class="card clickable ${product.active ? '' : 'inactive-row'}" data-id="${product.id}"><img src="${product.image || 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=900&q=80'}" alt="${product.name}"><div class="info"><div class="name">${product.name}</div><div class="meta">${product.category}</div></div><div class="price">${formatPrice(product.price)}</div><div class="actions"><button class="small-btn edit" data-edit="${product.id}" type="button">Editar</button><button class="small-btn toggle ${product.active ? 'active' : 'inactive'}" data-toggle="${product.id}" type="button">${product.active ? 'Activo' : 'Pausado'}</button></div></div>`).join(''); grid.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); openEdit(Number(btn.dataset.edit)); })); grid.querySelectorAll('[data-toggle]').forEach(btn => btn.addEventListener('click', async e => { e.stopPropagation(); await toggleStatus(Number(btn.dataset.toggle)); })); grid.querySelectorAll('.card.clickable').forEach(card => card.addEventListener('click', () => openEdit(Number(card.dataset.id)))); }
+async function loadProducts(){ const { data, error } = await supabaseClient.from('products').select('*').order('sort_order', {ascending:true}).order('name', {ascending:true}); if (error){ console.error(error); showToast('No se pudieron cargar los productos'); return; } products = (data || []).map(item => ({ id:item.id, name:item.name, category:item.category, description:item.description || '', price:item.price, active:!!item.is_active, image:item.image_url || '' })); renderFilters(); renderProducts(); }
+async function toggleStatus(id){ const product = products.find(p => p.id === id); if (!product) return; const next = !product.active; const { error } = await supabaseClient.from('products').update({ is_active: next }).eq('id', id); if (error){ console.error(error); showToast('No se pudo cambiar el estado'); return; } product.active = next; renderProducts(); showToast(next ? 'Producto activado' : 'Producto pausado'); }
+function resetForm(){ form.reset(); productId.value = ''; tempImage = ''; imagePreview.src = ''; imagePreview.classList.remove('show'); statusInput.value = 'true'; }
+function openDrawer(){ drawer.classList.add('show'); drawerBackdrop.classList.add('show'); drawer.setAttribute('aria-hidden','false'); document.body.classList.add('modal-open'); }
+function closeDrawer(){ drawer.classList.remove('show'); drawerBackdrop.classList.remove('show'); drawer.setAttribute('aria-hidden','true'); document.body.classList.remove('modal-open'); }
+function openAdd(){ resetForm(); drawerTitle.textContent='Agregar producto'; drawerSubtitle.textContent='Completá los datos del producto del menú.'; openDrawer(); }
+function openEdit(id){ const product = products.find(p => p.id === id); if (!product) return; resetForm(); drawerTitle.textContent='Editar producto'; drawerSubtitle.textContent='Actualizá datos, foto o estado del producto.'; productId.value = product.id; nameInput.value = product.name; priceInput.value = product.price; categoryInput.value = product.category; descriptionInput.value = product.description; statusInput.value = String(product.active); tempImage = product.image || ''; if (tempImage){ imagePreview.src = tempImage; imagePreview.classList.add('show'); } openDrawer(); }
+function handleImagePreview(file){ if (!file) return; const reader = new FileReader(); reader.onload = () => { tempImage = reader.result; imagePreview.src = tempImage; imagePreview.classList.add('show'); }; reader.readAsDataURL(file); }
+async function uploadImageIfNeeded(){ const file = imageInput.files?.[0]; if (!file) return tempImage || null; const ext = file.name.split('.').pop() || 'jpg'; const path = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`; const { error: uploadError } = await supabaseClient.storage.from('product-images').upload(path, file, { upsert: true }); if (uploadError) throw uploadError; const { data } = supabaseClient.storage.from('product-images').getPublicUrl(path); return data.publicUrl; }
+form.addEventListener('submit', async (e) => { e.preventDefault(); const payload = { name:nameInput.value.trim(), category:categoryInput.value, description:descriptionInput.value.trim(), price:Number(priceInput.value || 0), is_active: statusInput.value === 'true' }; if (!payload.name || !payload.price){ showToast('Completá nombre y precio'); return; } try { const imageUrl = await uploadImageIfNeeded(); if (imageUrl) payload.image_url = imageUrl; let error; if (productId.value){ ({ error } = await supabaseClient.from('products').update(payload).eq('id', Number(productId.value))); } else { payload.sort_order = 0; ({ error } = await supabaseClient.from('products').insert(payload)); } if (error) throw error; await loadProducts(); closeDrawer(); showToast(productId.value ? 'Producto actualizado' : 'Producto agregado'); } catch(err){ console.error(err); showToast('No se pudo guardar el producto'); } });
+searchInput.addEventListener('input', renderProducts);
+onlyActiveBtn.addEventListener('click', () => { onlyActive = !onlyActive; onlyActiveBtn.textContent = `Solo activos: ${onlyActive ? 'ON' : 'OFF'}`; renderProducts(); });
+sortBtn.addEventListener('click', () => { sortAsc = !sortAsc; sortBtn.textContent = sortAsc ? 'Ordenar A-Z' : 'Ordenar Z-A'; renderProducts(); });
+imageInput.addEventListener('change', () => handleImagePreview(imageInput.files?.[0]));
+openAddBtn.addEventListener('click', openAdd);
+closeDrawerBtn.addEventListener('click', closeDrawer);
+cancelBtn.addEventListener('click', closeDrawer);
+drawerBackdrop.addEventListener('click', closeDrawer);
+document.getElementById('refreshBtn').addEventListener('click', async () => { await loadProducts(); showToast('Vista actualizada'); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape') closeDrawer(); });
+loadProducts();
 
-  const grid = document.getElementById("productsGrid");
-  const filters = document.getElementById("filters");
-  const searchInput = document.getElementById("searchInput");
-  const onlyActiveBtn = document.getElementById("onlyActiveBtn");
-  const sortBtn = document.getElementById("sortBtn");
-
-  const drawer = document.getElementById("drawer");
-  const drawerBackdrop = document.getElementById("drawerBackdrop");
-  const openAddBtn = document.getElementById("openAddBtn");
-  const closeDrawerBtn = document.getElementById("closeDrawerBtn");
-  const cancelBtn = document.getElementById("cancelBtn");
-  const drawerTitle = document.getElementById("drawerTitle");
-  const drawerSubtitle = document.getElementById("drawerSubtitle");
-
-  const form = document.getElementById("productForm");
-  const productId = document.getElementById("productId");
-  const nameInput = document.getElementById("nameInput");
-  const priceInput = document.getElementById("priceInput");
-  const categoryInput = document.getElementById("categoryInput");
-  const descriptionInput = document.getElementById("descriptionInput");
-  const imageInput = document.getElementById("imageInput");
-  const imagePreview = document.getElementById("imagePreview");
-  const statusInput = document.getElementById("statusInput");
-  const toast = document.getElementById("toast");
-
-  function formatPrice(value){
-    return `$${Number(value).toLocaleString("es-AR")}`;
-  }
-
-  function showToast(message){
-    toast.textContent = message;
-    toast.classList.add("show");
-    clearTimeout(showToast._timer);
-    showToast._timer = setTimeout(() => toast.classList.remove("show"), 1800);
-  }
-
-  function getCategories(){
-    return ["Todas", ...new Set(products.map(p => p.category))];
-  }
-
-  function renderFilters(){
-    filters.innerHTML = getCategories().map(category => `
-      <button class="filter ${currentCategory === category ? 'active' : ''}" data-category="${category}" type="button">${category}</button>
-    `).join("");
-
-    filters.querySelectorAll(".filter").forEach(btn => {
-      btn.addEventListener("click", () => {
-        currentCategory = btn.dataset.category;
-        renderFilters();
-        renderProducts();
-      });
-    });
-  }
-
-  function getFilteredProducts(){
-    const search = searchInput.value.trim().toLowerCase();
-
-    let list = products.filter(product => {
-      const matchesCategory = currentCategory === "Todas" || product.category === currentCategory;
-      const matchesActive = !onlyActive || product.active;
-      const haystack = `${product.name} ${product.category} ${product.description}`.toLowerCase();
-      const matchesSearch = haystack.includes(search);
-      return matchesCategory && matchesActive && matchesSearch;
-    });
-
-    list.sort((a, b) => sortAsc
-      ? a.name.localeCompare(b.name, "es")
-      : b.name.localeCompare(a.name, "es")
-    );
-
-    return list;
-  }
-
-  function renderProducts(){
-    const list = getFilteredProducts();
-
-    if (!list.length){
-      grid.innerHTML = `<div class="empty">No hay productos que coincidan con los filtros.</div>`;
-      return;
-    }
-
-    grid.innerHTML = list.map(product => `
-      <div class="card clickable ${product.active ? '' : 'inactive-row'}" data-id="${product.id}">
-        <img src="${product.image}" alt="${product.name}">
-        <div class="info">
-          <div class="name">${product.name}</div>
-          <div class="meta">${product.category}</div>
-        </div>
-        <div class="price">${formatPrice(product.price)}</div>
-        <div class="actions">
-          <button class="small-btn edit" data-edit="${product.id}" type="button">Editar</button>
-          <button class="small-btn toggle ${product.active ? 'active' : 'inactive'}" data-toggle="${product.id}" type="button">
-            ${product.active ? 'Activo' : 'Pausado'}
-          </button>
-        </div>
-      </div>
-    `).join("");
-
-    grid.querySelectorAll("[data-edit]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        openEdit(Number(btn.dataset.edit));
-      });
-    });
-
-    grid.querySelectorAll("[data-toggle]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleStatus(Number(btn.dataset.toggle));
-      });
-    });
-
-    grid.querySelectorAll(".card.clickable").forEach(card => {
-      card.addEventListener("click", () => openEdit(Number(card.dataset.id)));
-    });
-  }
-
-  function toggleStatus(id){
-    const product = products.find(p => p.id === id);
-    if (!product) return;
-    product.active = !product.active;
-    renderProducts();
-    showToast(product.active ? "Producto activado" : "Producto pausado");
-  }
-
-  function resetForm(){
-    form.reset();
-    productId.value = "";
-    tempImage = "";
-    imagePreview.src = "";
-    imagePreview.classList.remove("show");
-    statusInput.value = "true";
-  }
-
-  function openDrawer(){
-    drawer.classList.add("show");
-    drawerBackdrop.classList.add("show");
-    drawer.setAttribute("aria-hidden", "false");
-    document.body.classList.add("modal-open");
-  }
-
-  function closeDrawer(){
-    drawer.classList.remove("show");
-    drawerBackdrop.classList.remove("show");
-    drawer.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("modal-open");
-  }
-
-  function openAdd(){
-    resetForm();
-    drawerTitle.textContent = "Agregar producto";
-    drawerSubtitle.textContent = "Completá los datos del producto del menú.";
-    openDrawer();
-  }
-
-  function openEdit(id){
-    const product = products.find(p => p.id === id);
-    if (!product) return;
-
-    resetForm();
-    drawerTitle.textContent = "Editar producto";
-    drawerSubtitle.textContent = "Actualizá datos, foto o estado del producto.";
-    productId.value = product.id;
-    nameInput.value = product.name;
-    priceInput.value = product.price;
-    categoryInput.value = product.category;
-    descriptionInput.value = product.description;
-    statusInput.value = String(product.active);
-
-    tempImage = product.image;
-    imagePreview.src = product.image;
-    imagePreview.classList.add("show");
-
-    openDrawer();
-  }
-
-  function handleImagePreview(file){
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      tempImage = reader.result;
-      imagePreview.src = tempImage;
-      imagePreview.classList.add("show");
-    };
-    reader.readAsDataURL(file);
-  }
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const payload = {
-      name: nameInput.value.trim(),
-      category: categoryInput.value,
-      description: descriptionInput.value.trim(),
-      price: Number(priceInput.value || 0),
-      active: statusInput.value === "true",
-      image: tempImage || "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=900&q=80"
-    };
-
-    if (!payload.name || !payload.price){
-      showToast("Completá nombre y precio");
-      return;
-    }
-
-    if (productId.value){
-      const id = Number(productId.value);
-      const index = products.findIndex(p => p.id === id);
-      if (index !== -1){
-        products[index] = { ...products[index], ...payload };
-        showToast("Producto actualizado");
-      }
-    } else {
-      const nextId = Math.max(...products.map(p => p.id), 0) + 1;
-      products.unshift({ id: nextId, ...payload });
-      showToast("Producto agregado");
-    }
-
-    renderFilters();
-    renderProducts();
-    closeDrawer();
-  });
-
-  searchInput.addEventListener("input", renderProducts);
-
-  onlyActiveBtn.addEventListener("click", () => {
-    onlyActive = !onlyActive;
-    onlyActiveBtn.textContent = `Solo activos: ${onlyActive ? 'ON' : 'OFF'}`;
-    renderProducts();
-  });
-
-  sortBtn.addEventListener("click", () => {
-    sortAsc = !sortAsc;
-    sortBtn.textContent = sortAsc ? "Ordenar A-Z" : "Ordenar Z-A";
-    renderProducts();
-  });
-
-  imageInput.addEventListener("change", () => {
-    handleImagePreview(imageInput.files?.[0]);
-  });
-
-  openAddBtn.addEventListener("click", openAdd);
-  closeDrawerBtn.addEventListener("click", closeDrawer);
-  cancelBtn.addEventListener("click", closeDrawer);
-  drawerBackdrop.addEventListener("click", closeDrawer);
-  document.getElementById("refreshBtn").addEventListener("click", () => {
-    renderFilters();
-    renderProducts();
-    showToast("Vista actualizada");
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeDrawer();
-  });
-
-  renderFilters();
-  renderProducts();
 </script>
-
 </body>
 </html>
