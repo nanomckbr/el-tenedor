@@ -6,7 +6,7 @@
   <title>El Tenedor</title>
   <style>
     :root {
-      --bg: #f7f5f0;
+      --bg: linear-gradient(180deg, #ffcc8a 0%, #f59c42 45%, #d86c1f 100%);
       --card: #ffffff;
       --text: #1e1e1e;
       --muted: #6f6f6f;
@@ -33,6 +33,7 @@
     body {
       font-family: Arial, Helvetica, sans-serif;
       background: var(--bg);
+      min-height: 100vh;
       color: var(--text);
       padding-bottom: 108px;
     }
@@ -155,6 +156,78 @@
       font-size: 0.95rem;
       line-height: 1.45;
     }
+
+    body.dark-mode {
+      --card: #1d1d1d;
+      --text: #f5f5f5;
+      --muted: #c8c8c8;
+      --primary: #35c46a;
+      --primary-dark: #259852;
+      --accent: #ffbf47;
+      --border: rgba(255,255,255,.12);
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.22);
+      --shadow-strong: 0 18px 40px rgba(0,0,0,.34);
+      background: linear-gradient(180deg, #4a2508 0%, #261208 55%, #120a05 100%);
+    }
+
+    body.dark-mode .categories {
+      background: rgba(28, 18, 10, 0.86);
+    }
+
+    body.dark-mode .chip {
+      background: #2a211b;
+      color: #f5f5f5;
+    }
+
+    body.dark-mode .chip.active {
+      color: #1e1e1e;
+    }
+
+    body.dark-mode .section-subtitle {
+      color: #f0ddcf;
+    }
+
+    body.dark-mode .cart-panel,
+    body.dark-mode .field-group input,
+    body.dark-mode .delivery-option,
+    body.dark-mode .cart-item,
+    body.dark-mode .counter,
+    body.dark-mode .btn-clear,
+    body.dark-mode .cart-close {
+      background: #221913;
+      color: #f5f5f5;
+    }
+
+    body.dark-mode .btn-counter {
+      background: #2e241d;
+      color: #fff;
+    }
+
+    body.dark-mode .cart-item-price,
+    body.dark-mode .field-label,
+    body.dark-mode .field-group label {
+      color: #f0ddcf;
+    }
+
+    .hidden { display:none !important; }
+
+    .hero-actions {
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .theme-toggle {
+      background: rgba(255,255,255,.14);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.2);
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:bold;
+      backdrop-filter: blur(6px);
+    }
+
 
     .categories {
       position: sticky;
@@ -832,7 +905,8 @@
   
     .cart-fab {
       position: fixed;
-      left: 18px;
+      right: 18px;
+      left: auto;
       bottom: 18px;
       width: 64px;
       height: 64px;
@@ -889,7 +963,8 @@
 
     .cart-panel {
       position: absolute;
-      left: 18px;
+      right: 18px;
+      left: auto;
       bottom: 92px;
       width: min(420px, calc(100vw - 36px));
       max-height: min(78vh, 760px);
@@ -1131,7 +1206,8 @@
 
     @media (max-width: 768px) {
       .cart-fab {
-        left: 14px;
+        right: 14px;
+        left: auto;
         bottom: 14px;
         width: 58px;
         height: 58px;
@@ -1180,7 +1256,7 @@
               <p>Pedidos por delivery y para consumir en el local</p>
             </div>
           </div>
-          <div class="status">Estado: <span>Abierto</span></div>
+          <div class="hero-actions"><div class="status">Estado: <span>Abierto</span></div><button class="theme-toggle" id="theme-toggle" type="button">Modo oscuro</button></div>
         </div>
         <div class="hero-copy">
           <h2>Elegí tu pedido, agregalo al carrito y envialo directo por WhatsApp.</h2>
@@ -1229,7 +1305,7 @@
             <input id="customer-name" type="text" placeholder="Tu nombre" />
           </div>
 
-          <div class="field-group">
+          <div class="field-group" id="address-group">
             <label for="customer-address">Domicilio</label>
             <input id="customer-address" type="text" placeholder="Tu dirección" />
           </div>
@@ -1377,6 +1453,9 @@
     const menuSections = document.getElementById('menu-sections');
     const cartBadge = document.getElementById('cart-badge');    const cartModal = document.getElementById('cart-modal');
     const cartItems = document.getElementById('cart-items');
+    const addressGroup = document.getElementById('address-group');
+    const deliveryInputs = document.querySelectorAll('input[name="delivery-type"]');
+    const themeToggle = document.getElementById('theme-toggle');
     const modalCartTotal = document.getElementById('modal-cart-total');
     const toast = document.getElementById('toast');
     let toastTimer = null;
@@ -1479,7 +1558,6 @@
       const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
       const totalPrecio = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
 
-      cartCount.textContent = totalItems === 1 ? '1 producto' : `${totalItems} productos`;
       cartBadge.textContent = totalItems;
       modalCartTotal.textContent = formatoARS(totalPrecio);
 
@@ -1556,6 +1634,11 @@
       window.open(url, '_blank');
     }
 
+    function actualizarVisibilidadDomicilio() {
+      const entrega = document.querySelector('input[name="delivery-type"]:checked')?.value || 'Retiro en local';
+      addressGroup.classList.toggle('hidden', entrega === 'Retiro en local');
+    }
+
     function abrirCarrito() {
       cartModal.classList.add('show');
       cartModal.setAttribute('aria-hidden', 'false');
@@ -1577,25 +1660,25 @@
         toast.classList.remove('show');
       }, 1800);
     }
-
-
     function activarChip(categoriaId) {
       categoriaActiva = categoriaId;
       renderCategorias();
       renderMenu();
-      bindCategoryEvents();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function bindCategoryEvents() {
-      document.querySelectorAll('[data-category-link]').forEach(link => {
-        link.addEventListener('click', () => {
-          activarChip(link.dataset.categoryLink);
-        });
-      });
-    }
 
     document.getElementById('open-cart-btn').addEventListener('click', abrirCarrito);
+    categoriesNav.addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-category-link]');
+      if (!btn) return;
+      activarChip(btn.dataset.categoryLink);
+    });
+    deliveryInputs.forEach(input => input.addEventListener('change', actualizarVisibilidadDomicilio));
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      themeToggle.textContent = document.body.classList.contains('dark-mode') ? 'Modo claro' : 'Modo oscuro';
+    });
     document.getElementById('modal-order-btn').addEventListener('click', enviarWhatsApp);
     document.getElementById('close-cart-btn').addEventListener('click', cerrarCarrito);
     document.getElementById('cart-backdrop').addEventListener('click', cerrarCarrito);
@@ -1610,7 +1693,7 @@
     renderCategorias();
     renderMenu();
     renderCarrito();
-    bindCategoryEvents();
+    actualizarVisibilidadDomicilio();
 
     window.agregarAlCarrito = agregarAlCarrito;
     window.cambiarCantidad = cambiarCantidad;
