@@ -1386,373 +1386,254 @@ body.dark-mode .chip.active {
     </div>
   </div>
 
-  <script>
-    const numeroWhatsApp = "5490000000000";
-    const categorias = [
-      {
-        id: "hamburguesas",
-        nombre: "Hamburguesas",
-        descripcion: "Las más pedidas del local.",
-        productos: [
-          {
-            id: 1,
-            nombre: "Hamburguesa completa",
-            descripcion: "Pan con semillas, carne, lechuga, tomate y huevo.",
-            precio: 5000,
-            imagen: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80"
-          },
-          {
-            id: 2,
-            nombre: "Hamburguesa doble completa",
-            descripcion: "Doble carne con vegetales frescos y huevo.",
-            precio: 6800,
-            imagen: "https://images.unsplash.com/photo-1550317138-10000687a72b?auto=format&fit=crop&w=600&q=80"
-          },
-          {
-            id: 3,
-            nombre: "Hamburguesa doble con fritas",
-            descripcion: "Doble hamburguesa acompañada con papas fritas.",
-            precio: 7800,
-            imagen: "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?auto=format&fit=crop&w=600&q=80"
-          },
-          {
-            id: 4,
-            nombre: "Hamburguesa triple completa",
-            descripcion: "Triple carne para los que quieren ir fuerte.",
-            precio: 7800,
-            imagen: "https://images.unsplash.com/photo-1596662951482-0c4ba74a6df6?auto=format&fit=crop&w=600&q=80"
-          },
-          {
-            id: 5,
-            nombre: "Hamburguesa triple con fritas",
-            descripcion: "Triple hamburguesa más porción de fritas.",
-            precio: 8800,
-            imagen: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80"
-          }
-        ]
-      },
-      {
-        id: "acompanamientos",
-        nombre: "Acompañamientos",
-        descripcion: "Extras simples para completar el pedido.",
-        productos: [
-          {
-            id: 6,
-            nombre: "Porción de fritas",
-            descripcion: "Papas fritas doradas y crocantes.",
-            precio: 4000,
-            imagen: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80"
-          }
-        ]
-      },
-      {
-        id: "promos",
-        nombre: "Promos",
-        descripcion: "Combos pensados para compartir.",
-        productos: [
-          {
-            id: 7,
-            nombre: "3 hamburguesas + fritas grandes",
-            descripcion: "Promo ideal para compartir.",
-            precio: 15000,
-            imagen: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80"
-          },
-          {
-            id: 8,
-            nombre: "Super combo kid",
-            descripcion: "Combo familiar con hamburguesas y papas.",
-            precio: 15000,
-            imagen: "https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=600&q=80"
-          }
-        ]
-      },
-      {
-        id: "pizzas",
-        nombre: "Pizzas",
-        descripcion: "Opciones clásicas para sumar variedad.",
-        productos: [
-          {
-            id: 9,
-            nombre: "Pizza muzzarella",
-            descripcion: "La clásica que nunca falla.",
-            precio: 9000,
-            imagen: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80"
-          },
-          {
-            id: 10,
-            nombre: "Pizza de jamón",
-            descripcion: "Muzzarella con jamón cocido.",
-            precio: 12000,
-            imagen: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=600&q=80"
-          },
-          {
-            id: 11,
-            nombre: "Pizza primavera",
-            descripcion: "Una opción fresca y sabrosa.",
-            precio: 12000,
-            imagen: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80"
-          },
-          {
-            id: 12,
-            nombre: "Pizza napolitana",
-            descripcion: "Tomate, queso y un toque bien casero.",
-            precio: 12000,
-            imagen: "https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?auto=format&fit=crop&w=600&q=80"
-          }
-        ]
-      }
-    ];
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
 
-    const carrito = [];
-    const categoriesNav = document.getElementById('categories-nav');
-    const menuSections = document.getElementById('menu-sections');
-    const cartBadge = document.getElementById('cart-badge');    const cartModal = document.getElementById('cart-modal');
-    const cartItems = document.getElementById('cart-items');
-    const addressGroup = document.getElementById('address-group');
-    const deliveryInputs = document.querySelectorAll('input[name="delivery-type"]');
-    const themeToggle = document.getElementById('theme-toggle');
-    const modalCartTotal = document.getElementById('modal-cart-total');
-    const toast = document.getElementById('toast');
-    let toastTimer = null;
+const SUPABASE_URL = "https://fytgzvqtthzswpihlpsh.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_C3LXcMFims8fu3P4arad_w_vfGp0gIi";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    function formatoARS(valor) {
-      return `$${valor.toLocaleString('es-AR')}`;
-    }
+const carrito = [];
+const categoriesNav = document.getElementById('categories-nav');
+const menuSections = document.getElementById('menu-sections');
+const cartBadge = document.getElementById('cart-badge');
+const cartModal = document.getElementById('cart-modal');
+const cartItems = document.getElementById('cart-items');
+const addressGroup = document.getElementById('address-group');
+const deliveryInputs = document.querySelectorAll('input[name="delivery-type"]');
+const themeToggle = document.getElementById('theme-toggle');
+const modalCartTotal = document.getElementById('modal-cart-total');
+const toast = document.getElementById('toast');
+const brandTitle = document.querySelector('.brand h1');
+const brandSubtitle = document.querySelector('.brand p');
+const heroDescription = document.querySelector('.hero-copy p');
+const statusSpan = document.querySelector('.status span');
+const logoBadge = document.querySelector('.logo');
+let toastTimer = null;
+let products = [];
+let categories = [];
+let categoriaActiva = null;
+let numeroWhatsApp = '';
 
-    let categoriaActiva = categorias[0].id;
-
-    function renderCategorias() {
-      categoriesNav.innerHTML = categorias.map((categoria) => `
-        <button class="chip ${categoria.id === categoriaActiva ? 'active' : ''}" type="button" data-category-link="${categoria.id}">
-          ${categoria.nombre}
-        </button>
-      `).join('');
-    }
-
-    function renderMenu() {
-      const categoria = categorias.find(item => item.id === categoriaActiva) || categorias[0];
-
-      menuSections.innerHTML = `
-        <section class="section" id="${categoria.id}" data-category-section="${categoria.id}">
-          <h2 class="section-title">${categoria.nombre}</h2>
-          <p class="section-subtitle">${categoria.descripcion}</p>
-          <div class="products">
-            ${categoria.productos.map(producto => `
-              <article class="card">
-                <div class="card-content">
-                  <img class="card-image" src="${producto.imagen}" alt="${producto.nombre}">
-                  <div class="card-info">
-                    <h3>${producto.nombre}</h3>
-                    <p>${producto.descripcion}</p>
-                    <div class="card-bottom">
-                      <div class="price">${formatoARS(producto.precio)}</div>
-                      <button class="btn-add" type="button" onclick="agregarAlCarrito(${producto.id})">Agregar</button>
-                    </div>
-                  </div>
+function formatoARS(valor) { return `$${Number(valor || 0).toLocaleString('es-AR')}`; }
+function slugify(texto) {
+  return String(texto || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+function mostrarToast(mensaje) {
+  toast.textContent = mensaje;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+}
+function agruparCategorias(productList) {
+  const map = new Map();
+  productList.forEach(product => {
+    const catName = product.category || 'Otros';
+    const catId = slugify(catName) || 'otros';
+    if (!map.has(catId)) map.set(catId, { id: catId, nombre: catName, descripcion: '', productos: [] });
+    map.get(catId).productos.push({
+      id: product.id,
+      nombre: product.name,
+      descripcion: product.description || '',
+      precio: product.price,
+      imagen: product.image_url || 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=900&q=80'
+    });
+  });
+  return [...map.values()];
+}
+function renderCategorias() {
+  categoriesNav.innerHTML = categories.map(categoria => `
+    <button class="chip ${categoria.id === categoriaActiva ? 'active' : ''}" type="button" data-category-link="${categoria.id}">${categoria.nombre}</button>
+  `).join('');
+}
+function renderMenu() {
+  const categoria = categories.find(item => item.id === categoriaActiva) || categories[0];
+  if (!categoria) {
+    menuSections.innerHTML = '<div class="empty-state">No hay productos disponibles por ahora.</div>';
+    return;
+  }
+  menuSections.innerHTML = `
+    <section class="section" id="${categoria.id}" data-category-section="${categoria.id}">
+      <h2 class="section-title">${categoria.nombre}</h2>
+      <p class="section-subtitle">${categoria.descripcion || 'Elegí tus productos favoritos.'}</p>
+      <div class="products">
+        ${categoria.productos.map(producto => `
+          <article class="card">
+            <div class="card-content">
+              <img class="card-image" src="${producto.imagen}" alt="${producto.nombre}">
+              <div class="card-info">
+                <h3>${producto.nombre}</h3>
+                <p>${producto.descripcion || 'Producto disponible en el menú.'}</p>
+                <div class="card-bottom">
+                  <div class="price">${formatoARS(producto.precio)}</div>
+                  <button class="btn-add" type="button" onclick="agregarAlCarrito(${producto.id})">Agregar</button>
                 </div>
-              </article>
-            `).join('')}
-          </div>
-        </section>
-      `;
-    }
-
-    function obtenerProductoPorId(idProducto) {
-      for (const categoria of categorias) {
-        const producto = categoria.productos.find(item => item.id === idProducto);
-        if (producto) return producto;
-      }
-      return null;
-    }
-
-    function agregarAlCarrito(idProducto) {
-      const producto = obtenerProductoPorId(idProducto);
-      if (!producto) return;
-
-      const existente = carrito.find(item => item.id === idProducto);
-      if (existente) {
-        existente.cantidad += 1;
-      } else {
-        carrito.push({ ...producto, cantidad: 1 });
-      }
-
-      renderCarrito();
-      mostrarToast(`${producto.nombre} agregado al carrito`);
-    }
-
-    function cambiarCantidad(idProducto, cambio) {
-      const item = carrito.find(producto => producto.id === idProducto);
-      if (!item) return;
-
-      item.cantidad += cambio;
-
-      if (item.cantidad <= 0) {
-        eliminarProducto(idProducto);
-        return;
-      }
-
-      renderCarrito();
-    }
-
-    function eliminarProducto(idProducto) {
-      const indice = carrito.findIndex(item => item.id === idProducto);
-      if (indice === -1) return;
-      carrito.splice(indice, 1);
-      renderCarrito();
-    }
-
-    function vaciarCarrito() {
-      if (!carrito.length) return;
-      carrito.length = 0;
-      renderCarrito();
-      cerrarCarrito();
-      mostrarToast('Carrito vaciado');
-    }
-
-    function renderCarrito() {
-      const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-      const totalPrecio = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
-
-      cartBadge.textContent = totalItems;
-      modalCartTotal.textContent = formatoARS(totalPrecio);
-
-      cartItems.innerHTML = carrito.length ? carrito.map(item => `
-        <article class="cart-item">
-          <div class="cart-item-top">
-            <div>
-              <div class="cart-item-name">${item.nombre}</div>
-              <div class="cart-item-price">${formatoARS(item.precio)} c/u</div>
+              </div>
             </div>
-            <div class="cart-item-subtotal">${formatoARS(item.precio * item.cantidad)}</div>
-          </div>
-          <div class="cart-item-actions">
-            <div class="counter" aria-label="Cambiar cantidad de ${item.nombre}">
-              <button class="btn-counter" type="button" onclick="cambiarCantidad(${item.id}, -1)">−</button>
-              <span class="counter-value">${item.cantidad}</span>
-              <button class="btn-counter" type="button" onclick="cambiarCantidad(${item.id}, 1)">+</button>
-            </div>
-            <button class="btn-remove" type="button" onclick="eliminarProducto(${item.id})">Eliminar</button>
-          </div>
-        </article>
-      `).join('') : `
-        <div class="cart-empty">
-          Todavía no agregaste productos.<br>
-          Tocá <strong>Agregar</strong> en cualquier item del menú para empezar.
+          </article>
+        `).join('')}
+      </div>
+    </section>`;
+}
+function obtenerProductoPorId(idProducto) { return products.find(item => Number(item.id) === Number(idProducto)); }
+function agregarAlCarrito(idProducto) {
+  const producto = obtenerProductoPorId(idProducto);
+  if (!producto) return;
+  const existente = carrito.find(item => Number(item.id) === Number(idProducto));
+  if (existente) existente.cantidad += 1;
+  else carrito.push({ id: producto.id, nombre: producto.name, precio: Number(producto.price || 0), cantidad: 1 });
+  renderCarrito();
+  mostrarToast(`${producto.name} agregado al carrito`);
+}
+function cambiarCantidad(idProducto, cambio) {
+  const item = carrito.find(producto => Number(producto.id) === Number(idProducto));
+  if (!item) return;
+  item.cantidad += cambio;
+  if (item.cantidad <= 0) return eliminarProducto(idProducto);
+  renderCarrito();
+}
+function eliminarProducto(idProducto) {
+  const indice = carrito.findIndex(item => Number(item.id) === Number(idProducto));
+  if (indice === -1) return;
+  carrito.splice(indice, 1);
+  renderCarrito();
+}
+function vaciarCarrito() {
+  if (!carrito.length) return;
+  carrito.length = 0;
+  renderCarrito();
+  cerrarCarrito();
+  mostrarToast('Carrito vaciado');
+}
+function renderCarrito() {
+  const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+  const totalPrecio = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+  cartBadge.textContent = totalItems;
+  modalCartTotal.textContent = formatoARS(totalPrecio);
+  cartItems.innerHTML = carrito.length ? carrito.map(item => `
+    <article class="cart-item">
+      <div class="cart-item-top">
+        <div><div class="cart-item-name">${item.nombre}</div><div class="cart-item-price">${formatoARS(item.precio)} c/u</div></div>
+        <div class="cart-item-subtotal">${formatoARS(item.precio * item.cantidad)}</div>
+      </div>
+      <div class="cart-item-actions">
+        <div class="counter" aria-label="Cambiar cantidad de ${item.nombre}">
+          <button class="btn-counter" type="button" onclick="cambiarCantidad(${item.id}, -1)">−</button>
+          <span class="counter-value">${item.cantidad}</span>
+          <button class="btn-counter" type="button" onclick="cambiarCantidad(${item.id}, 1)">+</button>
         </div>
-      `;
-    }
+        <button class="btn-remove" type="button" onclick="eliminarProducto(${item.id})">Eliminar</button>
+      </div>
+    </article>`).join('') : `<div class="cart-empty">Todavía no agregaste productos.<br>Tocá <strong>Agregar</strong> en cualquier item del menú para empezar.</div>`;
+}
+function actualizarVisibilidadDomicilio() {
+  const entrega = document.querySelector('input[name="delivery-type"]:checked')?.value || 'Retiro en local';
+  addressGroup.classList.toggle('hidden', entrega === 'Retiro en local');
+}
+function construirMensajeWhatsApp(orderTotal) {
+  const nombre = document.getElementById('customer-name').value.trim();
+  const domicilio = document.getElementById('customer-address').value.trim();
+  const entrega = document.querySelector('input[name="delivery-type"]:checked')?.value || 'Retiro en local';
+  let mensaje = 'Hola! Quiero pedir:%0A%0A';
+  carrito.forEach(item => {
+    const subtotal = item.precio * item.cantidad;
+    mensaje += `- ${item.nombre} x${item.cantidad} — ${formatoARS(subtotal)}%0A`;
+  });
+  mensaje += `%0ATotal: ${formatoARS(orderTotal)}%0A%0A`;
+  mensaje += `Nombre: ${nombre || '-'}%0A`;
+  mensaje += `Entrega: ${entrega}%0A`;
+  mensaje += `Domicilio: ${entrega === 'Delivery' ? (domicilio || '-') : 'Retira en local'}`;
+  return mensaje;
+}
+async function guardarPedido() {
+  const entrega = document.querySelector('input[name="delivery-type"]:checked')?.value || 'Retiro en local';
+  const nombre = document.getElementById('customer-name').value.trim();
+  const domicilio = document.getElementById('customer-address').value.trim();
+  if (!carrito.length) { mostrarToast('Primero agregá al menos un producto'); return null; }
+  if (!nombre) { mostrarToast('Completá tu nombre'); document.getElementById('customer-name').focus(); return null; }
+  if (entrega === 'Delivery' && !domicilio) { mostrarToast('Completá el domicilio para delivery'); document.getElementById('customer-address').focus(); return null; }
+  const total = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+  const { data: insertedOrder, error: orderError } = await supabaseClient.from('orders').insert({
+    customer_name: nombre,
+    address: entrega === 'Delivery' ? domicilio : null,
+    order_type: entrega,
+    payment_method: 'Efectivo',
+    notes: null,
+    status: 'nuevo',
+    total
+  }).select().single();
+  if (orderError) throw orderError;
+  const itemsPayload = carrito.map(item => ({ order_id: insertedOrder.id, product_id: item.id, product_name: item.nombre, quantity: item.cantidad, unit_price: item.precio, subtotal: item.precio * item.cantidad }));
+  const { error: itemsError } = await supabaseClient.from('order_items').insert(itemsPayload);
+  if (itemsError) throw itemsError;
+  return { id: insertedOrder.id, total };
+}
+async function enviarWhatsApp() {
+  try {
+    const result = await guardarPedido();
+    if (!result) return;
+    if (!numeroWhatsApp) { mostrarToast('Falta configurar el WhatsApp del local'); return; }
+    const url = `https://wa.me/${numeroWhatsApp}?text=${construirMensajeWhatsApp(result.total)}`;
+    window.open(url, '_blank');
+    vaciarCarrito();
+    document.getElementById('customer-name').value = '';
+    document.getElementById('customer-address').value = '';
+    mostrarToast(`Pedido #${result.id} enviado`);
+  } catch (error) {
+    console.error(error);
+    mostrarToast('No se pudo guardar el pedido');
+  }
+}
+function abrirCarrito() { cartModal.classList.add('show'); cartModal.setAttribute('aria-hidden', 'false'); document.body.classList.add('modal-open'); }
+function cerrarCarrito() { cartModal.classList.remove('show'); cartModal.setAttribute('aria-hidden', 'true'); document.body.classList.remove('modal-open'); }
+function activarChip(categoriaId) { categoriaActiva = categoriaId; renderCategorias(); renderMenu(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function aplicarStoreSettings(settings) {
+  if (!settings) return;
+  brandTitle.textContent = settings.store_name || 'El Tenedor';
+  brandSubtitle.textContent = settings.store_description || 'Pedidos por delivery y para consumir en el local';
+  heroDescription.textContent = settings.store_description || heroDescription.textContent;
+  numeroWhatsApp = String(settings.whatsapp_number || '').replace(/\D/g, '');
+  statusSpan.textContent = settings.is_open ? 'Abierto' : 'Cerrado';
+  if (settings.logo_url) logoBadge.innerHTML = `<img src="${settings.logo_url}" alt="Logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+}
+async function cargarDatos() {
+  const [productsRes, settingsRes] = await Promise.all([
+    supabaseClient.from('products').select('*').eq('is_active', true).order('sort_order', { ascending: true }).order('name', { ascending: true }),
+    supabaseClient.from('store_settings').select('*').limit(1).maybeSingle()
+  ]);
+  if (productsRes.error) {
+    console.error(productsRes.error);
+    menuSections.innerHTML = '<div class="empty-state">No se pudieron cargar los productos.</div>';
+    return;
+  }
+  if (!settingsRes.error) aplicarStoreSettings(settingsRes.data);
+  products = productsRes.data || [];
+  categories = agruparCategorias(products);
+  categoriaActiva = categories[0]?.id || null;
+  renderCategorias();
+  renderMenu();
+  renderCarrito();
+}
+document.getElementById('open-cart-btn').addEventListener('click', abrirCarrito);
+categoriesNav.addEventListener('click', (event) => { const btn = event.target.closest('[data-category-link]'); if (!btn) return; activarChip(btn.dataset.categoryLink); });
+deliveryInputs.forEach(input => input.addEventListener('change', actualizarVisibilidadDomicilio));
+themeToggle.addEventListener('click', () => { document.body.classList.toggle('dark-mode'); themeToggle.textContent = document.body.classList.contains('dark-mode') ? 'Modo claro' : 'Modo oscuro'; });
+document.getElementById('modal-order-btn').addEventListener('click', enviarWhatsApp);
+document.getElementById('close-cart-btn').addEventListener('click', cerrarCarrito);
+document.getElementById('cart-backdrop').addEventListener('click', cerrarCarrito);
+document.getElementById('clear-cart-btn').addEventListener('click', vaciarCarrito);
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && cartModal.classList.contains('show')) cerrarCarrito(); });
+actualizarVisibilidadDomicilio();
+window.agregarAlCarrito = agregarAlCarrito;
+window.cambiarCantidad = cambiarCantidad;
+window.eliminarProducto = eliminarProducto;
+cargarDatos();
 
-    function construirMensajeWhatsApp() {
-      const nombre = document.getElementById('customer-name').value.trim();
-      const domicilio = document.getElementById('customer-address').value.trim();
-      const entrega = document.querySelector('input[name="delivery-type"]:checked')?.value || 'Retiro en local';
-
-      let mensaje = 'Hola! Quiero pedir:%0A%0A';
-
-      carrito.forEach(item => {
-        const subtotal = item.precio * item.cantidad;
-        mensaje += `- ${item.nombre} x${item.cantidad} — ${formatoARS(subtotal)}%0A`;
-      });
-
-      const total = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
-      mensaje += `%0ATotal: ${formatoARS(total)}%0A%0A`;
-      mensaje += `Nombre: ${nombre || '-'}%0A`;
-      mensaje += `Entrega: ${entrega}%0A`;
-      mensaje += `Domicilio: ${entrega === 'Delivery' ? (domicilio || '-') : 'Retira en local'}`;
-
-      return mensaje;
-    }
-
-    function enviarWhatsApp() {
-      if (!carrito.length) {
-        mostrarToast('Primero agregá al menos un producto');
-        return;
-      }
-
-      const entrega = document.querySelector('input[name="delivery-type"]:checked')?.value || 'Retiro en local';
-      const nombre = document.getElementById('customer-name').value.trim();
-      const domicilio = document.getElementById('customer-address').value.trim();
-
-      if (!nombre) {
-        mostrarToast('Completá tu nombre');
-        document.getElementById('customer-name').focus();
-        return;
-      }
-
-      if (entrega === 'Delivery' && !domicilio) {
-        mostrarToast('Completá el domicilio para delivery');
-        document.getElementById('customer-address').focus();
-        return;
-      }
-
-      const url = `https://wa.me/${numeroWhatsApp}?text=${construirMensajeWhatsApp()}`;
-      window.open(url, '_blank');
-    }
-
-    function actualizarVisibilidadDomicilio() {
-      const entrega = document.querySelector('input[name="delivery-type"]:checked')?.value || 'Retiro en local';
-      addressGroup.classList.toggle('hidden', entrega === 'Retiro en local');
-    }
-
-    function abrirCarrito() {
-      cartModal.classList.add('show');
-      cartModal.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('modal-open');
-    }
-
-    function cerrarCarrito() {
-      cartModal.classList.remove('show');
-      cartModal.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('modal-open');
-    }
-
-    function mostrarToast(mensaje) {
-      toast.textContent = mensaje;
-      toast.classList.add('show');
-
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toast.classList.remove('show');
-      }, 1800);
-    }
-    function activarChip(categoriaId) {
-      categoriaActiva = categoriaId;
-      renderCategorias();
-      renderMenu();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-
-    document.getElementById('open-cart-btn').addEventListener('click', abrirCarrito);
-    categoriesNav.addEventListener('click', (event) => {
-      const btn = event.target.closest('[data-category-link]');
-      if (!btn) return;
-      activarChip(btn.dataset.categoryLink);
-    });
-    deliveryInputs.forEach(input => input.addEventListener('change', actualizarVisibilidadDomicilio));
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      themeToggle.textContent = document.body.classList.contains('dark-mode') ? 'Modo claro' : 'Modo oscuro';
-    });
-    document.getElementById('modal-order-btn').addEventListener('click', enviarWhatsApp);
-    document.getElementById('close-cart-btn').addEventListener('click', cerrarCarrito);
-    document.getElementById('cart-backdrop').addEventListener('click', cerrarCarrito);
-    document.getElementById('clear-cart-btn').addEventListener('click', vaciarCarrito);
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && cartModal.classList.contains('show')) {
-        cerrarCarrito();
-      }
-    });
-
-    renderCategorias();
-    renderMenu();
-    renderCarrito();
-    actualizarVisibilidadDomicilio();
-
-    window.agregarAlCarrito = agregarAlCarrito;
-    window.cambiarCantidad = cambiarCantidad;
-    window.eliminarProducto = eliminarProducto;
-  </script>
+</script>
 </body>
 </html>
