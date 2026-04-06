@@ -6,21 +6,21 @@
   <title>El Tenedor — Pedidos</title>
   <style>
     :root{
-      --bg: linear-gradient(180deg, #111111 0%, #161616 55%, #241705 100%);
-      --panel: rgba(18,18,18,.96);
+      --bg: linear-gradient(180deg, #121212 0%, #181818 55%, #2a1b08 100%);
+      --panel: rgba(20,20,20,.94);
       --panel-2: rgba(255,255,255,.04);
       --card: rgba(255,255,255,.05);
       --border: rgba(245,197,24,.18);
       --border-soft: rgba(255,255,255,.08);
       --text: #ffffff;
-      --muted: #d7d0c3;
+      --muted: #d2cbc0;
       --accent: #f5c518;
       --accent-dark: #c89e12;
       --green: #22c55e;
       --red: #ef4444;
       --blue: #3b82f6;
       --orange: #f59e0b;
-      --shadow: 0 18px 40px rgba(0,0,0,.34);
+      --shadow: 0 18px 40px rgba(0,0,0,.30);
       --radius-xl: 24px;
       --radius-lg: 20px;
       --radius-md: 16px;
@@ -33,20 +33,32 @@
       background: var(--bg);
       color: var(--text);
     }
-    button, input, select, textarea{font:inherit}
-    button{border:none; cursor:pointer}
-    .container{width:min(1500px, calc(100% - 24px)); margin:0 auto}
+
+    button, input, select{
+      font:inherit;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+    }
+
+    .container{
+      width:min(1500px, calc(100% - 24px));
+      margin:0 auto;
+    }
 
     .topbar{
       position:sticky;
       top:0;
       z-index:50;
       backdrop-filter: blur(14px);
-      background: rgba(10,10,10,.8);
+      background: rgba(10,10,10,.82);
       border-bottom: 1px solid rgba(245,197,24,.12);
     }
+
     .topbar-inner{
-      min-height: 84px;
+      min-height:84px;
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -61,6 +73,7 @@
       gap:14px;
       min-width:0;
     }
+
     .logo{
       width:56px;
       height:56px;
@@ -78,14 +91,16 @@
       padding:6px;
       flex-shrink:0;
     }
+
     .brand h1{
       margin:0 0 4px;
       font-size: clamp(1.4rem, 3vw, 2rem);
     }
+
     .brand p{
       margin:0;
       color: var(--muted);
-      font-size: .95rem;
+      font-size:.95rem;
     }
 
     .top-actions{
@@ -97,16 +112,17 @@
     }
 
     .btn, .pill{
-      border-radius: 14px;
-      padding: 12px 16px;
-      font-weight: 800;
+      border-radius:14px;
+      padding:12px 16px;
+      font-weight:800;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:8px;
-      white-space: nowrap;
-      transition: .16s ease;
+      white-space:nowrap;
+      transition:.16s ease;
     }
+
     .btn:hover{transform:translateY(-1px)}
     .btn:active{transform:translateY(0)}
 
@@ -115,20 +131,22 @@
       color:#000;
       box-shadow: 0 10px 24px rgba(245,197,24,.22);
     }
+
     .btn-dark{
       background: rgba(255,255,255,.05);
       color:#fff;
       border:1px solid rgba(255,255,255,.08);
     }
+
     .btn-danger{
       background: rgba(239,68,68,.16);
-      color: #ffd2d2;
+      color:#ffd2d2;
       border:1px solid rgba(239,68,68,.18);
     }
 
     .pill{
       background: rgba(245,197,24,.14);
-      color: #ffe69a;
+      color:#ffe69a;
       border:1px solid rgba(245,197,24,.2);
     }
 
@@ -143,29 +161,20 @@
     .summary-card{
       background: rgba(255,255,255,.05);
       border:1px solid rgba(245,197,24,.14);
-      border-radius: 22px;
+      border-radius:22px;
       padding:16px 18px;
       box-shadow: var(--shadow);
     }
+
     .summary-card small{
       display:block;
-      color: var(--muted);
+      color:var(--muted);
       margin-bottom:8px;
     }
+
     .summary-card strong{
       font-size: clamp(1.6rem, 3vw, 2.2rem);
       line-height:1;
-    }
-
-    .updated{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding: 4px 0 16px;
-      color: var(--muted);
-      font-size:.9rem;
-      flex-wrap:wrap;
     }
 
     .mobile-tabs{
@@ -184,18 +193,18 @@
     .kanban-column{
       background: rgba(255,255,255,.03);
       border:1px solid rgba(245,197,24,.1);
-      border-radius: 24px;
-      padding: 12px;
-      min-height: 200px;
+      border-radius:24px;
+      padding:12px;
+      min-height:200px;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
     }
 
     .column-header{
       background: rgba(0,0,0,.28);
       border:1px solid rgba(255,255,255,.08);
-      border-radius: 18px;
-      padding: 12px;
-      margin-bottom: 12px;
+      border-radius:18px;
+      padding:12px;
+      margin-bottom:12px;
     }
 
     .column-top{
@@ -207,24 +216,24 @@
 
     .column-title{
       margin:0;
-      font-size: 1rem;
+      font-size:1rem;
     }
 
     .column-count{
-      min-width: 34px;
+      min-width:34px;
       height:34px;
       border-radius:999px;
       display:grid;
       place-items:center;
       font-weight:900;
       background: rgba(245,197,24,.14);
-      color: #ffe69a;
+      color:#ffe69a;
     }
 
     .column-subtitle{
       margin-top:6px;
-      color: var(--muted);
-      font-size: .82rem;
+      color:var(--muted);
+      font-size:.82rem;
     }
 
     .column-body{
@@ -235,14 +244,15 @@
     .order-card{
       background: rgba(255,255,255,.045);
       border:1px solid rgba(255,255,255,.08);
-      border-radius: 18px;
-      padding: 10px 12px;
+      border-radius:18px;
+      padding:10px 12px;
       box-shadow: 0 12px 28px rgba(0,0,0,.22);
-      transition: .16s ease;
+      transition:.16s ease;
     }
+
     .order-card:hover{
-      transform: translateY(-1px);
-      border-color: rgba(245,197,24,.2);
+      transform:translateY(-1px);
+      border-color:rgba(245,197,24,.2);
     }
 
     .order-header{
@@ -265,6 +275,7 @@
       font-size:.84rem;
       color:#f7f2e7;
     }
+
     .order-summary-item.muted{
       color:var(--muted);
     }
@@ -287,10 +298,11 @@
       letter-spacing:.03em;
       line-height:1;
     }
+
     .status-nuevo{background:rgba(59,130,246,.18); color:#bfdbfe}
     .status-preparando{background:rgba(245,158,11,.18); color:#fde68a}
-    .status-enviado{background:rgba(245,197,24,.18); color:#fff0a8}
-    .status-entregado{background:rgba(34,197,94,.18); color:#bbf7d0}
+    .status-listo{background:rgba(245,197,24,.18); color:#fff0a8}
+    .status-finalizado{background:rgba(34,197,94,.18); color:#bbf7d0}
     .status-cancelado{background:rgba(239,68,68,.18); color:#fecaca}
 
     .order-toggle{
@@ -317,7 +329,9 @@
       background: rgba(255,255,255,.03);
       border:1px solid rgba(255,255,255,.08);
     }
+
     .box:first-child{margin-top:0}
+
     .box h4{
       margin:0 0 10px;
       font-size:.95rem;
@@ -329,10 +343,12 @@
       color:#ece8df;
       font-size:.9rem;
     }
+
     .items ul{
       margin:0;
       padding-left:18px;
     }
+
     .items li{margin-bottom:8px}
 
     .action-row{
@@ -348,14 +364,14 @@
     }
 
     .field-row.two-cols{
-      grid-template-columns: 1fr auto;
+      grid-template-columns:1fr auto;
       align-items:end;
     }
 
     .small-label{
       display:block;
       margin-bottom:6px;
-      color: var(--muted);
+      color:var(--muted);
       font-size:.75rem;
       font-weight:800;
       text-transform:uppercase;
@@ -379,6 +395,7 @@
       margin-top:12px;
       color:#f4f4f5;
     }
+
     .checkbox-line input{
       width:18px;
       height:18px;
@@ -391,6 +408,7 @@
       margin-top:10px;
       font-size:.9rem;
     }
+
     .price-preview strong{
       font-size:1.05rem;
       color:#fff1b9;
@@ -406,10 +424,11 @@
       font-weight:800;
       margin-top:10px;
     }
+
     .badge-confirmed{background:rgba(34,197,94,.16); color:#bbf7d0}
     .badge-soft{background:rgba(255,255,255,.08); color:#e4e4e7}
 
-    .empty,.column-empty,.loading{
+    .empty,.column-empty{
       padding:18px;
       border:1px dashed rgba(255,255,255,.1);
       border-radius:18px;
@@ -417,15 +436,14 @@
       text-align:center;
     }
 
-    @media (max-width: 900px){
-      .summary-row{
-        grid-template-columns: 1fr;
-      }
+    @media (max-width:900px){
+      .summary-row{grid-template-columns:1fr}
     }
 
-    @media (max-width: 768px){
+    @media (max-width:768px){
       .container{width:min(100%, calc(100% - 16px))}
       .topbar-inner{align-items:flex-start}
+
       .mobile-tabs{
         display:flex;
         gap:8px;
@@ -433,7 +451,9 @@
         padding:2px 0 14px;
         scrollbar-width:none;
       }
+
       .mobile-tabs::-webkit-scrollbar{display:none}
+
       .mobile-tab-btn{
         flex:0 0 auto;
         padding:10px 14px;
@@ -445,15 +465,18 @@
         font-size:.85rem;
         white-space:nowrap;
       }
+
       .mobile-tab-btn.active{
         background: var(--accent);
         color:#000;
         border-color: var(--accent);
       }
+
       .kanban-grid{
-        grid-template-columns: 1fr !important;
+        grid-template-columns:1fr !important;
         overflow-x:visible;
       }
+
       .kanban-column{display:none}
       .kanban-column.active-mobile{display:block}
     }
@@ -466,13 +489,13 @@
         <div class="logo">el<br>tenedor</div>
         <div>
           <h1>Pedidos — El Tenedor</h1>
-          <p>Control diario de pedidos, cobros y entregas.</p>
+          <p>Panel operativo diario del local.</p>
         </div>
       </div>
 
       <div class="top-actions">
-        <button class="btn btn-dark" id="refresh-btn" type="button">Actualizar</button>
-        <button class="btn btn-danger" id="reset-day-btn" type="button">Reset del día</button>
+        <button class="btn btn-dark" type="button" id="refresh-btn">Actualizar</button>
+        <button class="btn btn-danger" type="button" id="reset-day-btn">Reset del día</button>
       </div>
     </div>
   </header>
@@ -481,100 +504,109 @@
     <div class="summary-row">
       <section class="summary-card">
         <small>Ventas del día</small>
-        <strong id="stat-ventas">$0</strong>
+        <strong id="sales-total">$84.600</strong>
       </section>
 
-      <div class="pill" id="updated-at">Sin actualizar todavía</div>
-      <div class="pill" id="day-cut-info">Corte del día: no definido.</div>
+      <div class="pill" id="updated-at">Actualizado: 21:14</div>
+      <div class="pill" id="day-cut-info">Corte del día: 00:00</div>
     </div>
 
     <div class="mobile-tabs" id="mobile-tabs">
       <button type="button" class="mobile-tab-btn active" data-tab="nuevos">Nuevos</button>
       <button type="button" class="mobile-tab-btn" data-tab="preparando">Preparando</button>
-      <button type="button" class="mobile-tab-btn" data-tab="despacho">Despacho</button>
+      <button type="button" class="mobile-tab-btn" data-tab="listo">Listos</button>
       <button type="button" class="mobile-tab-btn" data-tab="finalizados">Finalizados</button>
       <button type="button" class="mobile-tab-btn" data-tab="cancelados">Cancelados</button>
     </div>
 
-    <div id="orders-container" class="kanban-grid">
-      <div class="loading">Cargando pedidos...</div>
-    </div>
+    <div id="orders-container" class="kanban-grid"></div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const supabaseUrl = 'https://ylvmzavgebttklblidcd.supabase.co';
-    const supabaseKey = 'sb_publishable_rFS54R3Uw06tOJ0qxoFhBA_uoEHW457';
-    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-
-    const WORKFLOW_STORAGE_KEY = 'pedidoscomidas_order_workflow_v1';
-
-    async function requireAuth() {
-      const { data, error } = await supabaseClient.auth.getSession();
-      if (error || !data.session) {
-        window.location.href = '/pedidos.html';
-        return false;
+    const demoOrders = [
+      {
+        id: 1024,
+        customer_name: "Mariano",
+        status: "nuevo",
+        order_type: "Delivery",
+        address: "Av. San Martín 123",
+        payment_method: "Efectivo",
+        total: 10800,
+        created_at: "21:14",
+        notes: "Sin cebolla",
+        items: [
+          { quantity: 1, product_name: "Hamburguesa doble completa", subtotal: 6800 },
+          { quantity: 1, product_name: "Porción de fritas", subtotal: 4000 }
+        ],
+        workflow: { deliveryFee: 0, finalPriceConfirmed: false, delivered: false, paid: false, finalTotal: 10800 }
+      },
+      {
+        id: 1023,
+        customer_name: "Rocío",
+        status: "preparando",
+        order_type: "Retiro en local",
+        address: "",
+        payment_method: "Transferencia",
+        total: 15000,
+        created_at: "20:57",
+        notes: "",
+        items: [
+          { quantity: 1, product_name: "3 hamburguesas + fritas grandes", subtotal: 15000 }
+        ],
+        workflow: { deliveryFee: 0, finalPriceConfirmed: false, delivered: false, paid: true, finalTotal: 15000 }
+      },
+      {
+        id: 1022,
+        customer_name: "Sofi",
+        status: "listo",
+        order_type: "Delivery",
+        address: "Barrio Centro 88",
+        payment_method: "Efectivo",
+        total: 13000,
+        created_at: "20:33",
+        notes: "Golpear portón",
+        items: [
+          { quantity: 1, product_name: "Pizza muzzarella", subtotal: 9000 },
+          { quantity: 1, product_name: "Porción de fritas", subtotal: 4000 }
+        ],
+        workflow: { deliveryFee: 1000, finalPriceConfirmed: true, delivered: false, paid: false, finalTotal: 14000 }
+      },
+      {
+        id: 1021,
+        customer_name: "Lucas",
+        status: "finalizado",
+        order_type: "Delivery",
+        address: "Mitre 550",
+        payment_method: "Mercado Pago",
+        total: 9000,
+        created_at: "20:02",
+        notes: "",
+        items: [
+          { quantity: 1, product_name: "Pizza muzzarella", subtotal: 9000 }
+        ],
+        workflow: { deliveryFee: 1000, finalPriceConfirmed: true, delivered: true, paid: true, finalTotal: 10000 }
+      },
+      {
+        id: 1020,
+        customer_name: "Ana",
+        status: "cancelado",
+        order_type: "Retiro en local",
+        address: "",
+        payment_method: "Efectivo",
+        total: 5000,
+        created_at: "19:41",
+        notes: "Cliente canceló",
+        items: [
+          { quantity: 1, product_name: "Hamburguesa completa", subtotal: 5000 }
+        ],
+        workflow: { deliveryFee: 0, finalPriceConfirmed: false, delivered: false, paid: false, finalTotal: 5000 }
       }
-      return true;
-    }
+    ];
 
     const ordersContainer = document.getElementById('orders-container');
-    const refreshBtn = document.getElementById('refresh-btn');
-    const resetDayBtn = document.getElementById('reset-day-btn');
     const updatedAtEl = document.getElementById('updated-at');
     const dayCutInfoEl = document.getElementById('day-cut-info');
-    const statVentas = document.getElementById('stat-ventas');
-
-    let knownOrderIds = new Set();
-    let workflowMeta = loadWorkflowMeta();
     let openedOrderId = null;
-
-    function loadWorkflowMeta() {
-      try {
-        return JSON.parse(localStorage.getItem(WORKFLOW_STORAGE_KEY) || '{}');
-      } catch {
-        return {};
-      }
-    }
-
-    function saveWorkflowMeta() {
-      localStorage.setItem(WORKFLOW_STORAGE_KEY, JSON.stringify(workflowMeta));
-    }
-
-    function getOrderMeta(orderId) {
-      return workflowMeta[String(orderId)] || {
-        deliveryFee: 0,
-        finalPriceConfirmed: false,
-        delivered: false,
-        paid: false,
-        finalTotal: null
-      };
-    }
-
-    function setOrderMeta(orderId, patch) {
-      const key = String(orderId);
-      workflowMeta[key] = { ...getOrderMeta(orderId), ...patch };
-      saveWorkflowMeta();
-    }
-
-    function getEnrichedOrder(order) {
-      const meta = getOrderMeta(order.id);
-      const deliveryFee = Number(meta.deliveryFee || 0);
-      const baseTotal = Number(order.total || 0);
-      const finalTotal = meta.finalPriceConfirmed
-        ? Number(meta.finalTotal || baseTotal + deliveryFee)
-        : baseTotal + deliveryFee;
-
-      return {
-        ...order,
-        workflow: {
-          ...meta,
-          deliveryFee,
-          baseTotal,
-          finalTotal
-        }
-      };
-    }
 
     function formatPrice(value) {
       return new Intl.NumberFormat('es-AR', {
@@ -584,159 +616,13 @@
       }).format(Number(value || 0));
     }
 
-    function formatDate(value) {
-      const date = new Date(value);
-      return date.toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
-    }
-
-    function statusClass(status) {
-      return `status-${status}`;
-    }
-
-    function getDayCut() {
-      const saved = window.__dayResetAt;
-      if (saved) return new Date(saved);
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
-      return now;
-    }
-
-    function getDayReset() {
-      return getDayCut();
-    }
-
-    async function fetchDayReset() {
-      const { data, error } = await supabaseClient
-        .from('store_settings')
-        .select('day_reset_at')
-        .eq('store_id', 1)
-        .maybeSingle();
-
-      if (error) {
-        console.error('No se pudo leer day_reset_at:', error);
-        window.__dayResetAt = null;
-        return;
-      }
-
-      window.__dayResetAt = data?.day_reset_at || null;
-    }
-
-    async function setDayCutNow() {
-      const now = new Date().toISOString();
-
-      const { error } = await supabaseClient
-        .from('store_settings')
-        .update({ day_reset_at: now })
-        .eq('store_id', 1);
-
-      if (error) {
-        console.error('No se pudo guardar day_reset_at:', error);
-        alert('No se pudo resetear el día.');
-        return false;
-      }
-
-      window.__dayResetAt = now;
-      updateDayCutInfo();
-      return true;
-    }
-
-    function updateDayCutInfo() {
-      const cut = getDayCut();
-      dayCutInfoEl.textContent = `Corte del día: ${cut.toLocaleString('es-AR')}`;
-    }
-
-    function playNewOrderSound() {
-      try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const notes = [
-          { freq: 880, start: 0.00, duration: 0.18, gain: 0.16 },
-          { freq: 988, start: 0.20, duration: 0.18, gain: 0.16 },
-          { freq: 1174, start: 0.40, duration: 0.26, gain: 0.18 }
-        ];
-
-        notes.forEach(note => {
-          const oscillator = audioContext.createOscillator();
-          const gainNode = audioContext.createGain();
-          oscillator.type = 'sine';
-          oscillator.frequency.setValueAtTime(note.freq, audioContext.currentTime + note.start);
-          gainNode.gain.setValueAtTime(0.001, audioContext.currentTime + note.start);
-          gainNode.gain.exponentialRampToValueAtTime(note.gain, audioContext.currentTime + note.start + 0.03);
-          gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + note.start + note.duration);
-          oscillator.connect(gainNode);
-          gainNode.connect(audioContext.destination);
-          oscillator.start(audioContext.currentTime + note.start);
-          oscillator.stop(audioContext.currentTime + note.start + note.duration);
-        });
-      } catch (error) {
-        console.log('No se pudo reproducir sonido:', error);
-      }
-    }
-
-    function detectNewOrders(orders) {
-      const currentIds = new Set(orders.map(order => order.id));
-      if (knownOrderIds.size > 0) {
-        const hasNew = [...currentIds].some(id => !knownOrderIds.has(id));
-        if (hasNew) playNewOrderSound();
-      }
-      knownOrderIds = currentIds;
-    }
-
-    function sortOrders(orders) {
-      return [...orders].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    }
-
-    function buildStats(orders) {
-      const cut = getDayCut();
-      const ventasDelDia = orders
-        .filter(order => order.status === 'entregado' && new Date(order.created_at) >= cut)
-        .reduce((sum, order) => sum + Number(order.workflow?.finalTotal || order.total || 0), 0);
-
-      statVentas.textContent = formatPrice(ventasDelDia);
-    }
-
-    async function updateStatus(orderId, newStatus) {
-      const { error } = await supabaseClient
-        .from('orders')
-        .update({ status: newStatus })
-        .eq('id', orderId);
-
-      if (error) {
-        console.error(error);
-        alert('No se pudo actualizar el estado.');
-        return false;
-      }
-
-      return true;
-    }
-
-    async function handleConfirmOrder(orderId) {
-      openedOrderId = String(orderId);
-      const ok = await updateStatus(orderId, 'preparando');
-      if (!ok) return;
-      await loadOrders();
-    }
-
-    async function handleCancelOrder(orderId) {
-      openedOrderId = String(orderId);
-      const ok = await updateStatus(orderId, 'cancelado');
-      if (!ok) return;
-      await loadOrders();
-    }
-
-    async function handleReadyOrder(orderId) {
-      openedOrderId = String(orderId);
-      const ok = await updateStatus(orderId, 'enviado');
-      if (!ok) return;
-      await loadOrders();
-    }
-
     function renderNewActions(order) {
       return `
         <div class="box">
           <h4>Acciones</h4>
           <div class="action-row">
-            <button class="btn btn-accent" data-confirm-order="${order.id}">Confirmar</button>
-            <button class="btn btn-danger" data-cancel-order="${order.id}">Rechazar</button>
+            <button class="btn btn-accent" type="button">Confirmar</button>
+            <button class="btn btn-danger" type="button">Rechazar</button>
           </div>
         </div>
       `;
@@ -747,65 +633,43 @@
         <div class="box">
           <h4>Cocina</h4>
           <div class="action-row">
-            <button class="btn btn-accent" data-ready-order="${order.id}">Marcar listo</button>
-            <button class="btn btn-dark" data-cancel-order="${order.id}">Cancelar</button>
+            <button class="btn btn-accent" type="button">Marcar listo</button>
+            <button class="btn btn-dark" type="button">Cancelar</button>
           </div>
         </div>
       `;
     }
 
-    function renderDispatchActions(order) {
+    function renderReadyActions(order) {
       const workflow = order.workflow || {};
-      const badgeClass = workflow.finalPriceConfirmed ? 'badge-confirmed' : 'badge-soft';
-      const badgeText = workflow.finalPriceConfirmed ? 'Precio final confirmado' : 'Precio final pendiente';
-      const finalPreview = workflow.finalPriceConfirmed ? workflow.finalTotal : workflow.baseTotal + workflow.deliveryFee;
-
       return `
         <div class="box">
           <h4>Entrega y cobro</h4>
-
           <div class="field-row two-cols">
             <div>
-              <label class="small-label" for="delivery-fee-${order.id}">Costo de envío</label>
-              <input
-                id="delivery-fee-${order.id}"
-                type="number"
-                min="0"
-                step="1"
-                value="${workflow.deliveryFee || 0}"
-                data-order-id="${order.id}"
-                data-delivery-fee-input
-              />
+              <label class="small-label">Costo de envío</label>
+              <input type="number" value="${workflow.deliveryFee || 0}" />
             </div>
-            <button class="btn btn-accent" data-order-id="${order.id}" data-confirm-final-price>Confirmar precio</button>
+            <button class="btn btn-accent" type="button">Confirmar precio</button>
           </div>
 
           <div class="price-preview">
-            <div>Total productos: ${formatPrice(workflow.baseTotal)}</div>
-            <div>Envío: ${formatPrice(workflow.deliveryFee)}</div>
-            <strong>Total final: <span data-final-price-preview>${formatPrice(finalPreview)}</span></strong>
+            <div>Total productos: ${formatPrice(order.total)}</div>
+            <div>Envío: ${formatPrice(workflow.deliveryFee || 0)}</div>
+            <strong>Total final: ${formatPrice(workflow.finalTotal || order.total)}</strong>
           </div>
 
-          <div class="${badgeClass}" data-final-price-badge>${badgeText}</div>
+          <div class="${workflow.finalPriceConfirmed ? 'badge-confirmed' : 'badge-soft'}">
+            ${workflow.finalPriceConfirmed ? 'Precio final confirmado' : 'Precio final pendiente'}
+          </div>
 
           <label class="checkbox-line">
-            <input type="checkbox" data-order-id="${order.id}" data-paid-checkbox ${workflow.paid ? 'checked' : ''} />
+            <input type="checkbox" ${workflow.paid ? 'checked' : ''} />
             <span>Pagado</span>
           </label>
 
           <div class="action-row" style="margin-top:12px;">
-            <button class="btn btn-accent" data-order-id="${order.id}" data-delivered-btn ${workflow.delivered ? 'disabled' : ''}>
-              ${workflow.delivered ? 'Entregado ✓' : 'Entregado'}
-            </button>
-          </div>
-
-          <div class="box">
-            <div class="small-label" style="margin-bottom:8px;">Checklist</div>
-            <div class="price-preview" data-dispatch-steps>
-              <div>${workflow.finalPriceConfirmed ? '✅' : '⬜'} Precio final confirmado</div>
-              <div>${workflow.delivered ? '✅' : '⬜'} Pedido entregado</div>
-              <div>${workflow.paid ? '✅' : '⬜'} Pedido pagado</div>
-            </div>
+            <button class="btn btn-accent" type="button">${workflow.delivered ? 'Entregado ✓' : 'Entregado'}</button>
           </div>
         </div>
       `;
@@ -817,9 +681,9 @@
         <div class="box">
           <h4>Resumen final</h4>
           <div class="price-preview">
-            <div>Total productos: ${formatPrice(workflow.baseTotal)}</div>
-            <div>Envío: ${formatPrice(workflow.deliveryFee)}</div>
-            <strong>Total final: ${formatPrice(workflow.finalTotal)}</strong>
+            <div>Total productos: ${formatPrice(order.total)}</div>
+            <div>Envío: ${formatPrice(workflow.deliveryFee || 0)}</div>
+            <strong>Total final: ${formatPrice(workflow.finalTotal || order.total)}</strong>
           </div>
           <div class="badge-confirmed">Pedido cobrado y entregado</div>
         </div>
@@ -831,48 +695,35 @@
         <div class="box">
           <h4>Pedido cancelado</h4>
           <div class="price-preview">
-            <div>Este pedido ya no participa del flujo ni de las ventas del día.</div>
+            <div>Este pedido ya no participa del flujo del día.</div>
           </div>
         </div>
       `;
     }
 
-    function renderOrderCard(order, items, visibleOrderNumberMap) {
-      const orderItems = items.filter(item => item.order_id === order.id);
-      const orderItemsCount = orderItems.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
-      const visibleOrderNumber = visibleOrderNumberMap?.get(order.id) || order.id;
-
-      const itemsHtml = orderItems.length
-        ? `
-          <div class="box items">
-            <h4>Productos</h4>
-            <ul>
-              ${orderItems.map(item => `<li>${item.quantity} x ${item.product_name} — ${formatPrice(item.subtotal)}</li>`).join('')}
-            </ul>
-          </div>
-        `
-        : `<div class="box"><div class="price-preview">Sin detalle de productos.</div></div>`;
+    function renderOrderCard(order) {
+      const orderItemsCount = order.items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
 
       let extraHtml = '';
       if (order.status === 'nuevo') extraHtml = renderNewActions(order);
       if (order.status === 'preparando') extraHtml = renderPreparingActions(order);
-      if (order.status === 'enviado') extraHtml = renderDispatchActions(order);
-      if (order.status === 'entregado') extraHtml = renderFinalizedSummary(order);
+      if (order.status === 'listo') extraHtml = renderReadyActions(order);
+      if (order.status === 'finalizado') extraHtml = renderFinalizedSummary(order);
       if (order.status === 'cancelado') extraHtml = renderCancelledSummary();
 
       return `
-        <article class="order-card" data-order-id="${order.id}" data-base-total="${Number(order.total || 0)}">
+        <article class="order-card" data-order-id="${order.id}">
           <div class="order-header">
             <div class="order-summary">
-              <span class="order-summary-item"><strong>Pedido #${visibleOrderNumber}</strong></span>
+              <span class="order-summary-item"><strong>Pedido #${order.id}</strong></span>
               <span class="order-summary-item muted">${order.customer_name || 'Cliente sin nombre'}</span>
-              <span class="order-summary-item muted">${new Date(order.created_at).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}</span>
+              <span class="order-summary-item muted">${order.created_at}</span>
               <span class="order-summary-item muted">${orderItemsCount} ítem${orderItemsCount === 1 ? '' : 's'}</span>
-              <span class="order-summary-item"><strong data-order-summary-total>${formatPrice(order.workflow?.finalTotal || order.total)}</strong></span>
+              <span class="order-summary-item"><strong>${formatPrice(order.workflow?.finalTotal || order.total)}</strong></span>
             </div>
 
             <div class="order-right">
-              <span class="status-pill ${statusClass(order.status)}">${order.status.toUpperCase()}</span>
+              <span class="status-pill status-${order.status}">${order.status.toUpperCase()}</span>
               <span class="order-toggle">▼</span>
             </div>
           </div>
@@ -886,21 +737,26 @@
                 ${order.address ? `<div><strong>Dirección:</strong> ${order.address}</div>` : ''}
                 <div><strong>Pago:</strong> ${order.payment_method || '-'}</div>
                 <div><strong>Total base:</strong> ${formatPrice(order.total)}</div>
-                <div><strong>Fecha:</strong> ${formatDate(order.created_at)}</div>
                 <div><strong>Observaciones:</strong> ${order.notes || '-'}</div>
               </div>
             </div>
 
-            ${itemsHtml}
+            <div class="box items">
+              <h4>Productos</h4>
+              <ul>
+                ${order.items.map(item => `<li>${item.quantity} x ${item.product_name} — ${formatPrice(item.subtotal)}</li>`).join('')}
+              </ul>
+            </div>
+
             ${extraHtml}
           </div>
         </article>
       `;
     }
 
-    function renderColumn(columnClass, title, subtitle, orders, items, visibleOrderNumberMap) {
+    function renderColumn(key, title, subtitle, orders) {
       return `
-        <section class="kanban-column ${columnClass}" data-status="${columnClass.replace('column-', '')}">
+        <section class="kanban-column column-${key}" data-status="${key}">
           <div class="column-header">
             <div class="column-top">
               <h2 class="column-title">${title}</h2>
@@ -909,12 +765,31 @@
             <div class="column-subtitle">${subtitle}</div>
           </div>
           <div class="column-body">
-            ${orders.length
-              ? orders.map(order => renderOrderCard(order, items, visibleOrderNumberMap)).join('')
-              : '<div class="column-empty">No hay pedidos en esta columna.</div>'}
+            ${orders.length ? orders.map(renderOrderCard).join('') : '<div class="column-empty">No hay pedidos en esta columna.</div>'}
           </div>
         </section>
       `;
+    }
+
+    function renderOrders() {
+      const nuevos = demoOrders.filter(order => order.status === 'nuevo');
+      const preparando = demoOrders.filter(order => order.status === 'preparando');
+      const listo = demoOrders.filter(order => order.status === 'listo');
+      const finalizados = demoOrders.filter(order => order.status === 'finalizado');
+      const cancelados = demoOrders.filter(order => order.status === 'cancelado');
+
+      ordersContainer.innerHTML = [
+        renderColumn('nuevos', 'Nuevos', 'Confirmar o rechazar', nuevos),
+        renderColumn('preparando', 'Preparando', 'Pedidos en cocina', preparando),
+        renderColumn('listo', 'Listos', 'Entrega y cobro', listo),
+        renderColumn('finalizados', 'Finalizados', 'Entregados y pagos', finalizados),
+        renderColumn('cancelados', 'Cancelados', 'Rechazados o anulados', cancelados)
+      ].join('');
+
+      enableOrderAccordion();
+      restoreOpenedOrder();
+      bindMobileTabs();
+      setActiveMobileTab(document.querySelector('.mobile-tab-btn.active')?.dataset.tab || 'nuevos');
     }
 
     function enableOrderAccordion() {
@@ -950,230 +825,6 @@
       }
     }
 
-    async function maybeFinalizeOrder(orderId, orderCard = null) {
-      const meta = getOrderMeta(orderId);
-      if (meta.finalPriceConfirmed && meta.paid && meta.delivered) {
-        openedOrderId = String(orderId);
-        const ok = await updateStatus(orderId, 'entregado');
-        if (ok) {
-          await loadOrders();
-        }
-      }
-    }
-
-    function syncDispatchInputs() {
-      document.querySelectorAll('[data-delivery-fee-input]').forEach(input => {
-        input.addEventListener('input', (event) => {
-          const orderId = event.target.dataset.orderId;
-          const value = Number(event.target.value || 0);
-          setOrderMeta(orderId, {
-            deliveryFee: Math.max(0, value),
-            finalPriceConfirmed: false,
-            finalTotal: null
-          });
-
-          const orderCard = event.target.closest('.order-card');
-          const baseTotal = Number(orderCard?.dataset.baseTotal || 0);
-          const preview = orderCard?.querySelector('[data-final-price-preview]');
-          if (preview) preview.textContent = formatPrice(baseTotal + Math.max(0, value));
-
-          const confirmedBadge = orderCard?.querySelector('[data-final-price-badge]');
-          if (confirmedBadge) {
-            confirmedBadge.textContent = 'Precio final pendiente';
-            confirmedBadge.className = 'badge-soft';
-          }
-
-          const steps = orderCard?.querySelector('[data-dispatch-steps]');
-          if (steps) {
-            const paid = getOrderMeta(orderId).paid;
-            const delivered = getOrderMeta(orderId).delivered;
-            steps.innerHTML = `
-              <div>⬜ Precio final confirmado</div>
-              <div>${delivered ? '✅' : '⬜'} Pedido entregado</div>
-              <div>${paid ? '✅' : '⬜'} Pedido pagado</div>
-            `;
-          }
-        });
-      });
-
-      document.querySelectorAll('[data-confirm-final-price]').forEach(button => {
-        button.addEventListener('click', async (event) => {
-          const orderId = Number(event.target.dataset.orderId);
-          const orderCard = event.target.closest('.order-card');
-          const feeInput = orderCard.querySelector('[data-delivery-fee-input]');
-          const baseTotal = Number(orderCard.dataset.baseTotal || 0);
-          const deliveryFee = Math.max(0, Number(feeInput?.value || 0));
-          const finalTotal = baseTotal + deliveryFee;
-
-          setOrderMeta(orderId, {
-            deliveryFee,
-            finalPriceConfirmed: true,
-            finalTotal
-          });
-
-          const preview = orderCard?.querySelector('[data-final-price-preview]');
-          if (preview) preview.textContent = formatPrice(finalTotal);
-
-          const confirmedBadge = orderCard?.querySelector('[data-final-price-badge]');
-          if (confirmedBadge) {
-            confirmedBadge.textContent = 'Precio final confirmado';
-            confirmedBadge.className = 'badge-confirmed';
-          }
-
-          const summaryTotal = orderCard?.querySelector('[data-order-summary-total]');
-          if (summaryTotal) summaryTotal.textContent = formatPrice(finalTotal);
-
-          const steps = orderCard?.querySelector('[data-dispatch-steps]');
-          if (steps) {
-            const meta = getOrderMeta(orderId);
-            steps.innerHTML = `
-              <div>${meta.finalPriceConfirmed ? '✅' : '⬜'} Precio final confirmado</div>
-              <div>${meta.delivered ? '✅' : '⬜'} Pedido entregado</div>
-              <div>${meta.paid ? '✅' : '⬜'} Pedido pagado</div>
-            `;
-          }
-        });
-      });
-
-      document.querySelectorAll('[data-paid-checkbox]').forEach(checkbox => {
-        checkbox.addEventListener('change', async (event) => {
-          const orderId = Number(event.target.dataset.orderId);
-          setOrderMeta(orderId, { paid: event.target.checked });
-
-          const orderCard = event.target.closest('.order-card');
-          const steps = orderCard?.querySelector('[data-dispatch-steps]');
-          if (steps) {
-            const meta = getOrderMeta(orderId);
-            steps.innerHTML = `
-              <div>${meta.finalPriceConfirmed ? '✅' : '⬜'} Precio final confirmado</div>
-              <div>${meta.delivered ? '✅' : '⬜'} Pedido entregado</div>
-              <div>${meta.paid ? '✅' : '⬜'} Pedido pagado</div>
-            `;
-          }
-
-          await maybeFinalizeOrder(orderId, orderCard);
-        });
-      });
-
-      document.querySelectorAll('[data-delivered-btn]').forEach(button => {
-        button.addEventListener('click', async (event) => {
-          const orderId = Number(event.target.dataset.orderId);
-          setOrderMeta(orderId, { delivered: true });
-
-          const orderCard = event.target.closest('.order-card');
-          event.target.disabled = true;
-          event.target.textContent = 'Entregado ✓';
-
-          const steps = orderCard?.querySelector('[data-dispatch-steps]');
-          if (steps) {
-            const meta = getOrderMeta(orderId);
-            steps.innerHTML = `
-              <div>${meta.finalPriceConfirmed ? '✅' : '⬜'} Precio final confirmado</div>
-              <div>${meta.delivered ? '✅' : '⬜'} Pedido entregado</div>
-              <div>${meta.paid ? '✅' : '⬜'} Pedido pagado</div>
-            `;
-          }
-
-          await maybeFinalizeOrder(orderId, orderCard);
-        });
-      });
-    }
-
-    function attachActionEvents() {
-      document.querySelectorAll('[data-confirm-order]').forEach(button => {
-        button.addEventListener('click', async (event) => {
-          const orderId = Number(event.target.dataset.confirmOrder);
-          await handleConfirmOrder(orderId);
-        });
-      });
-
-      document.querySelectorAll('[data-cancel-order]').forEach(button => {
-        button.addEventListener('click', async (event) => {
-          const orderId = Number(event.target.dataset.cancelOrder);
-          await handleCancelOrder(orderId);
-        });
-      });
-
-      document.querySelectorAll('[data-ready-order]').forEach(button => {
-        button.addEventListener('click', async (event) => {
-          const orderId = Number(event.target.dataset.readyOrder);
-          await handleReadyOrder(orderId);
-        });
-      });
-
-      syncDispatchInputs();
-    }
-
-    function renderOrders(orders, items) {
-      const enrichedOrders = sortOrders(orders).map(getEnrichedOrder);
-      const visibleOrderNumberMap = new Map();
-
-      [...enrichedOrders]
-        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-        .forEach((order, index) => {
-          visibleOrderNumberMap.set(order.id, index + 1);
-        });
-
-      buildStats(enrichedOrders);
-
-      if (!enrichedOrders.length) {
-        ordersContainer.innerHTML = '<div class="empty">Todavía no hay pedidos guardados.</div>';
-        return;
-      }
-
-      const nuevos = enrichedOrders.filter(order => order.status === 'nuevo');
-      const preparando = enrichedOrders.filter(order => order.status === 'preparando');
-      const despacho = enrichedOrders.filter(order => order.status === 'enviado');
-      const finalizados = enrichedOrders.filter(order => order.status === 'entregado');
-      const cancelados = enrichedOrders.filter(order => order.status === 'cancelado');
-
-      ordersContainer.innerHTML = [
-        renderColumn('column-nuevos', 'Nuevos', 'Confirmar o rechazar', nuevos, items, visibleOrderNumberMap),
-        renderColumn('column-preparando', 'Preparando', 'Pedidos en cocina', preparando, items, visibleOrderNumberMap),
-        renderColumn('column-despacho', 'Despacho', 'Entrega y cobro', despacho, items, visibleOrderNumberMap),
-        renderColumn('column-finalizados', 'Finalizados', 'Entregados y pagos', finalizados, items, visibleOrderNumberMap),
-        renderColumn('column-cancelados', 'Cancelados', 'Rechazados o anulados', cancelados, items, visibleOrderNumberMap)
-      ].join('');
-
-      attachActionEvents();
-      enableOrderAccordion();
-      restoreOpenedOrder();
-      bindMobileTabs();
-      setActiveMobileTab(document.querySelector('.mobile-tab-btn.active')?.dataset.tab || 'nuevos');
-    }
-
-    async function loadOrders() {
-      ordersContainer.innerHTML = '<div class="loading">Cargando pedidos...</div>';
-
-      const { data: ordersData, error: ordersError } = await supabaseClient
-        .from('orders')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      const { data: itemsData, error: itemsError } = await supabaseClient
-        .from('order_items')
-        .select('*')
-        .order('id', { ascending: true });
-
-      if (ordersError || itemsError) {
-        console.error(ordersError || itemsError);
-        ordersContainer.innerHTML = '<div class="empty">No se pudieron cargar los pedidos.</div>';
-        return;
-      }
-
-      const resetPoint = getDayReset();
-      const allOrders = ordersData || [];
-      const visibleOrders = allOrders.filter(order => new Date(order.created_at) >= resetPoint);
-      const visibleOrderIds = new Set(visibleOrders.map(order => order.id));
-      const visibleItems = (itemsData || []).filter(item => visibleOrderIds.has(item.order_id));
-
-      detectNewOrders(visibleOrders);
-      renderOrders(visibleOrders, visibleItems);
-
-      updatedAtEl.textContent = `Actualizado: ${new Date().toLocaleTimeString('es-AR')}`;
-      updateDayCutInfo();
-    }
-
     function setActiveMobileTab(tab) {
       const isMobile = window.innerWidth <= 768;
       const columns = document.querySelectorAll('.kanban-column');
@@ -1201,16 +852,12 @@
       });
     }
 
-    refreshBtn.addEventListener('click', async () => {
-      await loadOrders();
+    document.getElementById('refresh-btn').addEventListener('click', () => {
+      updatedAtEl.textContent = `Actualizado: ${new Date().toLocaleTimeString('es-AR', {hour: '2-digit', minute: '2-digit'})}`;
     });
 
-    resetDayBtn.addEventListener('click', async () => {
-      const ok = confirm('¿Seguro que quieres reiniciar el día? Se ocultarán de la vista todos los pedidos recibidos hasta este momento.');
-      if (!ok) return;
-      const success = await setDayCutNow();
-      if (!success) return;
-      await loadOrders();
+    document.getElementById('reset-day-btn').addEventListener('click', () => {
+      dayCutInfoEl.textContent = `Corte del día: ${new Date().toLocaleTimeString('es-AR', {hour: '2-digit', minute: '2-digit'})}`;
     });
 
     window.addEventListener('resize', () => {
@@ -1222,12 +869,7 @@
       }
     });
 
-    (async () => {
-      const allowed = await requireAuth();
-      if (!allowed) return;
-      await fetchDayReset();
-      await loadOrders();
-    })();
+    renderOrders();
   </script>
 </body>
 </html>
