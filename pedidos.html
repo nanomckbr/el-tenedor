@@ -578,359 +578,41 @@
     <div id="orders-container" class="kanban-grid"></div>
   </main>
 
-  <script>
-    const demoOrders = [
-      {
-        id: 1024,
-        customer_name: "Mariano",
-        status: "nuevo",
-        order_type: "Delivery",
-        address: "Av. San Martín 123",
-        payment_method: "Efectivo",
-        total: 10800,
-        created_at: "21:14",
-        notes: "Sin cebolla",
-        items: [
-          { quantity: 1, product_name: "Hamburguesa doble completa", subtotal: 6800 },
-          { quantity: 1, product_name: "Porción de fritas", subtotal: 4000 }
-        ],
-        workflow: { deliveryFee: 0, finalPriceConfirmed: false, delivered: false, paid: false, finalTotal: 10800 }
-      },
-      {
-        id: 1023,
-        customer_name: "Rocío",
-        status: "preparando",
-        order_type: "Retiro en local",
-        address: "",
-        payment_method: "Transferencia",
-        total: 15000,
-        created_at: "20:57",
-        notes: "",
-        items: [
-          { quantity: 1, product_name: "3 hamburguesas + fritas grandes", subtotal: 15000 }
-        ],
-        workflow: { deliveryFee: 0, finalPriceConfirmed: false, delivered: false, paid: true, finalTotal: 15000 }
-      },
-      {
-        id: 1022,
-        customer_name: "Sofi",
-        status: "listo",
-        order_type: "Delivery",
-        address: "Barrio Centro 88",
-        payment_method: "Efectivo",
-        total: 13000,
-        created_at: "20:33",
-        notes: "Golpear portón",
-        items: [
-          { quantity: 1, product_name: "Pizza muzzarella", subtotal: 9000 },
-          { quantity: 1, product_name: "Porción de fritas", subtotal: 4000 }
-        ],
-        workflow: { deliveryFee: 1000, finalPriceConfirmed: true, delivered: false, paid: false, finalTotal: 14000 }
-      },
-      {
-        id: 1021,
-        customer_name: "Lucas",
-        status: "finalizado",
-        order_type: "Delivery",
-        address: "Mitre 550",
-        payment_method: "Mercado Pago",
-        total: 9000,
-        created_at: "20:02",
-        notes: "",
-        items: [
-          { quantity: 1, product_name: "Pizza muzzarella", subtotal: 9000 }
-        ],
-        workflow: { deliveryFee: 1000, finalPriceConfirmed: true, delivered: true, paid: true, finalTotal: 10000 }
-      },
-      {
-        id: 1020,
-        customer_name: "Ana",
-        status: "cancelado",
-        order_type: "Retiro en local",
-        address: "",
-        payment_method: "Efectivo",
-        total: 5000,
-        created_at: "19:41",
-        notes: "Cliente canceló",
-        items: [
-          { quantity: 1, product_name: "Hamburguesa completa", subtotal: 5000 }
-        ],
-        workflow: { deliveryFee: 0, finalPriceConfirmed: false, delivered: false, paid: false, finalTotal: 5000 }
-      }
-    ];
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
 
-    const ordersContainer = document.getElementById('orders-container');
-    const updatedAtEl = document.getElementById('updated-at');
-    const dayCutInfoEl = document.getElementById('day-cut-info');
-    let openedOrderId = null;
+const SUPABASE_URL = "https://fytgzvqtthzswpihlpsh.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_C3LXcMFims8fu3P4arad_w_vfGp0gIi";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const ordersContainer = document.getElementById('orders-container');
+const updatedAtEl = document.getElementById('updated-at');
+const dayCutInfoEl = document.getElementById('day-cut-info');
+const activeOrdersPill = document.getElementById('active-orders-pill');
+const salesTotalEl = document.getElementById('sales-total');
+let openedOrderId = null;
+let resetPoint = localStorage.getItem('eltenedor_day_reset') || null;
+function formatPrice(value) { return new Intl.NumberFormat('es-AR', { style:'currency', currency:'ARS', maximumFractionDigits:0 }).format(Number(value || 0)); }
+function getDayReset() { return resetPoint ? new Date(resetPoint) : new Date(new Date().setHours(0,0,0,0)); }
+function updateDayCutInfo() { dayCutInfoEl.textContent = `Corte del día: ${getDayReset().toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})}`; }
+async function updateStatus(orderId, newStatus) { const { error } = await supabaseClient.from('orders').update({ status: newStatus }).eq('id', orderId); if (error) { console.error(error); alert('No se pudo actualizar el estado'); return false; } return true; }
+function renderNewActions(order) { return `<div class="box"><h4>Acciones</h4><div class="action-row"><button class="btn btn-accent" data-action="aceptar" data-id="${order.id}" type="button">Aceptar pedido</button><button class="btn btn-danger" data-action="cancelar" data-id="${order.id}" type="button">Rechazar</button></div></div>`; }
+function renderPreparingActions(order) { return `<div class="box"><h4>Cocina</h4><div class="action-row"><button class="btn btn-accent" data-action="listo" data-id="${order.id}" type="button">Pasar a listos</button><button class="btn btn-dark" data-action="cancelar" data-id="${order.id}" type="button">Cancelar</button></div></div>`; }
+function renderReadyActions(order) { return `<div class="box"><h4>Entrega y cobro</h4><div class="price-preview"><div>Total final: <strong>${formatPrice(order.total)}</strong></div></div><div class="action-row" style="margin-top:12px;"><button class="btn btn-accent" data-action="finalizar" data-id="${order.id}" type="button">Marcar entregado</button></div></div>`; }
+function renderFinalizedSummary(order) { return `<div class="box"><h4>Resumen final</h4><div class="price-preview"><strong>Total final: ${formatPrice(order.total)}</strong></div><div class="badge-confirmed">Pedido finalizado</div></div>`; }
+function renderCancelledSummary() { return `<div class="box"><h4>Pedido cancelado</h4><div class="price-preview"><div>Este pedido ya no participa del flujo del día.</div></div></div>`; }
+function renderOrderCard(order) { const orderItemsCount = (order.items || []).reduce((sum, item) => sum + Number(item.quantity || 0), 0); let extraHtml = ''; if (order.status === 'nuevo') extraHtml = renderNewActions(order); if (order.status === 'preparando') extraHtml = renderPreparingActions(order); if (order.status === 'listo') extraHtml = renderReadyActions(order); if (order.status === 'finalizado') extraHtml = renderFinalizedSummary(order); if (order.status === 'cancelado') extraHtml = renderCancelledSummary(); return `<article class="order-card ${order.status === 'nuevo' ? 'priority' : ''}" data-order-id="${order.id}"><div class="order-header"><div class="order-summary"><span class="order-summary-item"><strong>Pedido #${order.id}</strong></span><span class="order-summary-item muted">${order.customer_name || 'Cliente sin nombre'}</span><span class="order-summary-item muted">${new Date(order.created_at).toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})}</span><span class="order-summary-item muted">${orderItemsCount} ítem${orderItemsCount === 1 ? '' : 's'}</span><span class="order-summary-item order-price">${formatPrice(order.total)}</span></div><div class="order-right"><span class="status-pill status-${order.status}">${order.status.toUpperCase()}</span><span class="order-toggle">▼</span></div></div><div class="order-body"><div class="box"><h4>Datos del pedido</h4><div class="order-meta"><div><strong>Cliente:</strong> ${order.customer_name || '-'}</div><div><strong>Tipo:</strong> ${order.order_type || '-'}</div>${order.address ? `<div><strong>Dirección:</strong> ${order.address}</div>` : ''}<div><strong>Pago:</strong> ${order.payment_method || '-'}</div><div><strong>Total base:</strong> ${formatPrice(order.total)}</div><div><strong>Observaciones:</strong> ${order.notes || '-'}</div></div></div><div class="box items"><h4>Productos</h4><ul>${(order.items || []).map(item => `<li>${item.quantity} x ${item.product_name} — ${formatPrice(item.subtotal)}</li>`).join('')}</ul></div>${extraHtml}</div></article>`; }
+function renderColumn(key, title, subtitle, orders) { return `<section class="kanban-column column-${key}" data-status="${key}"><div class="column-header"><div class="column-top"><h2 class="column-title">${title}</h2><span class="column-count">${orders.length}</span></div><div class="column-subtitle">${subtitle}</div></div><div class="column-body">${orders.length ? orders.map(renderOrderCard).join('') : '<div class="column-empty">No hay pedidos en esta columna.</div>'}</div></section>`; }
+function enableOrderAccordion() { document.querySelectorAll('.order-header').forEach(header => { header.addEventListener('click', event => { if (event.target.closest('button, input, label, a, select, textarea')) return; const card = header.closest('.order-card'); const orderId = String(card.dataset.orderId || ''); const isOpen = card.classList.contains('open'); document.querySelectorAll('.order-card.open').forEach(openCard => openCard.classList.remove('open')); if (!isOpen) { card.classList.add('open'); openedOrderId = orderId; } else { openedOrderId = null; } }); }); }
+function restoreOpenedOrder() { if (!openedOrderId) return; const targetCard = document.querySelector(`.order-card[data-order-id="${openedOrderId}"]`); if (targetCard) targetCard.classList.add('open'); else openedOrderId = null; }
+function setActiveMobileTab(tab) { const isMobile = window.innerWidth <= 768; const columns = document.querySelectorAll('.kanban-column'); const buttons = document.querySelectorAll('.mobile-tab-btn'); if (!isMobile) { columns.forEach(col => col.classList.remove('active-mobile')); buttons.forEach(btn => btn.classList.remove('active')); return; } columns.forEach(col => { const status = col.dataset.status || ''; col.classList.toggle('active-mobile', status === tab); }); buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab)); }
+function bindMobileTabs() { document.querySelectorAll('.mobile-tab-btn').forEach(btn => btn.onclick = () => setActiveMobileTab(btn.dataset.tab)); }
+function attachActionEvents() { document.querySelectorAll('[data-action]').forEach(btn => btn.addEventListener('click', async () => { const id = Number(btn.dataset.id); const action = btn.dataset.action; if (action === 'aceptar') await updateStatus(id, 'preparando'); if (action === 'listo') await updateStatus(id, 'listo'); if (action === 'finalizar') await updateStatus(id, 'finalizado'); if (action === 'cancelar') await updateStatus(id, 'cancelado'); await loadOrders(); })); }
+async function loadOrders() { const { data: ordersData, error: ordersError } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false }); const { data: itemsData, error: itemsError } = await supabaseClient.from('order_items').select('*').order('id', { ascending: true }); if (ordersError || itemsError) { console.error(ordersError || itemsError); ordersContainer.innerHTML = '<div class="empty">No se pudieron cargar los pedidos.</div>'; return; } const visibleOrders = (ordersData || []).filter(order => new Date(order.created_at) >= getDayReset()); const itemsByOrder = new Map(); (itemsData || []).forEach(item => { if (!itemsByOrder.has(item.order_id)) itemsByOrder.set(item.order_id, []); itemsByOrder.get(item.order_id).push(item); }); visibleOrders.forEach(order => order.items = itemsByOrder.get(order.id) || []); const nuevos = visibleOrders.filter(order => order.status === 'nuevo'); const preparando = visibleOrders.filter(order => order.status === 'preparando'); const listo = visibleOrders.filter(order => order.status === 'listo'); const finalizados = visibleOrders.filter(order => order.status === 'finalizado'); const cancelados = visibleOrders.filter(order => order.status === 'cancelado'); const activeOrders = nuevos.length + preparando.length + listo.length; activeOrdersPill.textContent = `${activeOrders} pedido${activeOrders === 1 ? '' : 's'} activo${activeOrders === 1 ? '' : 's'}`; salesTotalEl.textContent = formatPrice(finalizados.reduce((sum, o) => sum + Number(o.total || 0), 0)); ordersContainer.innerHTML = [renderColumn('nuevos', 'Nuevos', 'Confirmar o rechazar', nuevos), renderColumn('preparando', 'Preparando', 'Pedidos en cocina', preparando), renderColumn('listo', 'Listos', 'Entrega y cobro', listo), renderColumn('finalizados', 'Finalizados', 'Entregados y pagos', finalizados), renderColumn('cancelados', 'Cancelados', 'Rechazados o anulados', cancelados)].join(''); enableOrderAccordion(); restoreOpenedOrder(); bindMobileTabs(); setActiveMobileTab(document.querySelector('.mobile-tab-btn.active')?.dataset.tab || 'nuevos'); attachActionEvents(); updatedAtEl.textContent = `Actualizado: ${new Date().toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})}`; updateDayCutInfo(); }
+document.getElementById('refresh-btn').addEventListener('click', loadOrders);
+document.getElementById('reset-day-btn').addEventListener('click', () => { resetPoint = new Date().toISOString(); localStorage.setItem('eltenedor_day_reset', resetPoint); updateDayCutInfo(); loadOrders(); });
+window.addEventListener('resize', () => { if (window.innerWidth <= 768) { const activeBtn = document.querySelector('.mobile-tab-btn.active'); setActiveMobileTab(activeBtn?.dataset.tab || 'nuevos'); } else { setActiveMobileTab(''); } });
+loadOrders();
 
-    function formatPrice(value) {
-      return new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: 'ARS',
-        maximumFractionDigits: 0
-      }).format(Number(value || 0));
-    }
-
-    function renderNewActions(order) {
-      return `
-        <div class="box">
-          <h4>Acciones</h4>
-          <div class="action-row">
-            <button class="btn btn-accent" type="button">Aceptar pedido</button>
-            <button class="btn btn-danger" type="button">Rechazar</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderPreparingActions(order) {
-      return `
-        <div class="box">
-          <h4>Cocina</h4>
-          <div class="action-row">
-            <button class="btn btn-accent" type="button">Pasar a listos</button>
-            <button class="btn btn-dark" type="button">Cancelar</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderReadyActions(order) {
-      const workflow = order.workflow || {};
-      return `
-        <div class="box">
-          <h4>Entrega y cobro</h4>
-          <div class="field-row two-cols">
-            <div>
-              <label class="small-label">Costo de envío</label>
-              <input type="number" value="${workflow.deliveryFee || 0}" />
-            </div>
-            <button class="btn btn-accent" type="button">Confirmar precio</button>
-          </div>
-
-          <div class="price-preview">
-            <div>Total productos: ${formatPrice(order.total)}</div>
-            <div>Envío: ${formatPrice(workflow.deliveryFee || 0)}</div>
-            <strong>Total final: ${formatPrice(workflow.finalTotal || order.total)}</strong>
-          </div>
-
-          <div class="${workflow.finalPriceConfirmed ? 'badge-confirmed' : 'badge-soft'}">
-            ${workflow.finalPriceConfirmed ? 'Precio final confirmado' : 'Precio final pendiente'}
-          </div>
-
-          <label class="checkbox-line">
-            <input type="checkbox" ${workflow.paid ? 'checked' : ''} />
-            <span>Pagado</span>
-          </label>
-
-          <div class="action-row" style="margin-top:12px;">
-            <button class="btn btn-accent" type="button">${workflow.delivered ? 'Entregado ✓' : 'Entregado'}</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderFinalizedSummary(order) {
-      const workflow = order.workflow || {};
-      return `
-        <div class="box">
-          <h4>Resumen final</h4>
-          <div class="price-preview">
-            <div>Total productos: ${formatPrice(order.total)}</div>
-            <div>Envío: ${formatPrice(workflow.deliveryFee || 0)}</div>
-            <strong>Total final: ${formatPrice(workflow.finalTotal || order.total)}</strong>
-          </div>
-          <div class="badge-confirmed">Pedido cobrado y entregado</div>
-        </div>
-      `;
-    }
-
-    function renderCancelledSummary() {
-      return `
-        <div class="box">
-          <h4>Pedido cancelado</h4>
-          <div class="price-preview">
-            <div>Este pedido ya no participa del flujo del día.</div>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderOrderCard(order) {
-      const orderItemsCount = order.items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
-
-      let extraHtml = '';
-      if (order.status === 'nuevo') extraHtml = renderNewActions(order);
-      if (order.status === 'preparando') extraHtml = renderPreparingActions(order);
-      if (order.status === 'listo') extraHtml = renderReadyActions(order);
-      if (order.status === 'finalizado') extraHtml = renderFinalizedSummary(order);
-      if (order.status === 'cancelado') extraHtml = renderCancelledSummary();
-
-      return `
-        <article class="order-card ${order.status === 'nuevo' ? 'priority' : ''}" data-order-id="${order.id}">
-          <div class="order-header">
-            <div class="order-summary">
-              <span class="order-summary-item"><strong>Pedido #${order.id}</strong></span>
-              <span class="order-summary-item muted">${order.customer_name || 'Cliente sin nombre'}</span>
-              <span class="order-summary-item muted">${order.created_at}</span>
-              <span class="order-summary-item muted">${orderItemsCount} ítem${orderItemsCount === 1 ? '' : 's'}</span>
-              <span class="order-summary-item order-price">${formatPrice(order.workflow?.finalTotal || order.total)}</span>
-            </div>
-
-            <div class="order-right">
-              <span class="status-pill status-${order.status}">${order.status.toUpperCase()}</span>
-              <span class="order-toggle">▼</span>
-            </div>
-          </div>
-
-          <div class="order-body">
-            <div class="box">
-              <h4>Datos del pedido</h4>
-              <div class="order-meta">
-                <div><strong>Cliente:</strong> ${order.customer_name || '-'}</div>
-                <div><strong>Tipo:</strong> ${order.order_type || '-'}</div>
-                ${order.address ? `<div><strong>Dirección:</strong> ${order.address}</div>` : ''}
-                <div><strong>Pago:</strong> ${order.payment_method || '-'}</div>
-                <div><strong>Total base:</strong> ${formatPrice(order.total)}</div>
-                <div><strong>Observaciones:</strong> ${order.notes || '-'}</div>
-              </div>
-            </div>
-
-            <div class="box items">
-              <h4>Productos</h4>
-              <ul>
-                ${order.items.map(item => `<li>${item.quantity} x ${item.product_name} — ${formatPrice(item.subtotal)}</li>`).join('')}
-              </ul>
-            </div>
-
-            ${extraHtml}
-          </div>
-        </article>
-      `;
-    }
-
-    function renderColumn(key, title, subtitle, orders) {
-      return `
-        <section class="kanban-column column-${key}" data-status="${key}">
-          <div class="column-header">
-            <div class="column-top">
-              <h2 class="column-title">${title}</h2>
-              <span class="column-count">${orders.length}</span>
-            </div>
-            <div class="column-subtitle">${subtitle}</div>
-          </div>
-          <div class="column-body">
-            ${orders.length ? orders.map(renderOrderCard).join('') : '<div class="column-empty">No hay pedidos en esta columna.</div>'}
-          </div>
-        </section>
-      `;
-    }
-
-    function renderOrders() {
-      const nuevos = demoOrders.filter(order => order.status === 'nuevo');
-      const preparando = demoOrders.filter(order => order.status === 'preparando');
-      const listo = demoOrders.filter(order => order.status === 'listo');
-      const finalizados = demoOrders.filter(order => order.status === 'finalizado');
-      const cancelados = demoOrders.filter(order => order.status === 'cancelado');
-      const activeOrders = nuevos.length + preparando.length + listo.length;
-      const activeOrdersPill = document.getElementById('active-orders-pill');
-      if (activeOrdersPill) {
-        activeOrdersPill.textContent = `${activeOrders} pedido${activeOrders === 1 ? '' : 's'} activo${activeOrders === 1 ? '' : 's'}`;
-      }
-
-      ordersContainer.innerHTML = [
-        renderColumn('nuevos', 'Nuevos', 'Confirmar o rechazar', nuevos),
-        renderColumn('preparando', 'Preparando', 'Pedidos en cocina', preparando),
-        renderColumn('listo', 'Listos', 'Entrega y cobro', listo),
-        renderColumn('finalizados', 'Finalizados', 'Entregados y pagos', finalizados),
-        renderColumn('cancelados', 'Cancelados', 'Rechazados o anulados', cancelados)
-      ].join('');
-
-      enableOrderAccordion();
-      restoreOpenedOrder();
-      bindMobileTabs();
-      setActiveMobileTab(document.querySelector('.mobile-tab-btn.active')?.dataset.tab || 'nuevos');
-    }
-
-    function enableOrderAccordion() {
-      document.querySelectorAll('.order-header').forEach(header => {
-        header.addEventListener('click', (event) => {
-          if (event.target.closest('button, input, label, a, select, textarea')) return;
-
-          const card = header.closest('.order-card');
-          const orderId = String(card.dataset.orderId || '');
-          const isOpen = card.classList.contains('open');
-
-          document.querySelectorAll('.order-card.open').forEach(openCard => {
-            openCard.classList.remove('open');
-          });
-
-          if (!isOpen) {
-            card.classList.add('open');
-            openedOrderId = orderId;
-          } else {
-            openedOrderId = null;
-          }
-        });
-      });
-    }
-
-    function restoreOpenedOrder() {
-      if (!openedOrderId) return;
-      const targetCard = document.querySelector(`.order-card[data-order-id="${openedOrderId}"]`);
-      if (targetCard) {
-        targetCard.classList.add('open');
-      } else {
-        openedOrderId = null;
-      }
-    }
-
-    function setActiveMobileTab(tab) {
-      const isMobile = window.innerWidth <= 768;
-      const columns = document.querySelectorAll('.kanban-column');
-      const buttons = document.querySelectorAll('.mobile-tab-btn');
-
-      if (!isMobile) {
-        columns.forEach(col => col.classList.remove('active-mobile'));
-        buttons.forEach(btn => btn.classList.remove('active'));
-        return;
-      }
-
-      columns.forEach(col => {
-        const status = col.dataset.status || '';
-        col.classList.toggle('active-mobile', status === tab);
-      });
-
-      buttons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === tab);
-      });
-    }
-
-    function bindMobileTabs() {
-      document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
-        btn.onclick = () => setActiveMobileTab(btn.dataset.tab);
-      });
-    }
-
-    document.getElementById('refresh-btn').addEventListener('click', () => {
-      updatedAtEl.textContent = `Actualizado: ${new Date().toLocaleTimeString('es-AR', {hour: '2-digit', minute: '2-digit'})}`;
-    });
-
-    document.getElementById('reset-day-btn').addEventListener('click', () => {
-      dayCutInfoEl.textContent = `Corte del día: ${new Date().toLocaleTimeString('es-AR', {hour: '2-digit', minute: '2-digit'})}`;
-    });
-
-    window.addEventListener('resize', () => {
-      if (window.innerWidth <= 768) {
-        const activeBtn = document.querySelector('.mobile-tab-btn.active');
-        setActiveMobileTab(activeBtn?.dataset.tab || 'nuevos');
-      } else {
-        setActiveMobileTab('');
-      }
-    });
-
-    renderOrders();
-  </script>
+</script>
 </body>
 </html>
