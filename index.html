@@ -1282,7 +1282,20 @@
       }
     }
 
-  </style>
+  
+body.dark-mode .chip {
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: #ffffff;
+}
+
+body.dark-mode .chip.active {
+  background: var(--accent);
+  color: #000000;
+  border: 2px solid var(--accent);
+}
+
+</style>
 </head>
 <body>
   <div class="toast" id="toast"></div>
